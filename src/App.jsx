@@ -417,7 +417,7 @@ export function App() {
       <Header
         courseTitle={
           practiceMode === 'auto'
-            ? currentExercise.courseTitle || 'All-in-One English'
+            ? currentExercise.courseTitle || 'TypeLingo Learning Zone'
             : currentCourse.title
         }
         lessonTitle={
