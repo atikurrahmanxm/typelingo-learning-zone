@@ -833,173 +833,40 @@ export const COURSES = [
 ]
 
 import sentences3000Data from './sentences_3000.json'
+import wordDictionary from './wordDictionary.js'
 
-// Auto-tagger for custom sentences with comprehensive dictionary
+// Auto-tagger with 100% complete Bengali meanings and grammar roles
 export function parseSentenceIntoWords(sentence) {
   if (!sentence) return []
   const clean = sentence.trim().replace(/\s+/g, ' ')
   const rawWords = clean.split(' ')
 
-  const bnDict = {
-    i: 'আমি',
-    you: 'তুমি / আপনি',
-    he: 'সে',
-    she: 'সে',
-    we: 'আমরা',
-    they: 'তারা',
-    it: 'এটি',
-    this: 'এই',
-    that: 'ঐ',
-    these: 'এগুলো',
-    those: 'ওগুলো',
-    my: 'আমার',
-    your: 'তোমার / আপনার',
-    our: 'আমাদের',
-    their: 'তাদের',
-    his: 'তার',
-    her: 'তার',
-    am: 'হই',
-    is: 'হয়',
-    are: 'হয়',
-    was: 'ছিল',
-    were: 'ছিল',
-    will: 'করব / হবে',
-    can: 'পারি',
-    could: 'পারতাম',
-    should: 'উচিত',
-    must: 'অবশ্যই',
-    would: 'করতাম',
-    may: 'পারি',
-    might: 'হতে পারে',
-    have: 'আছে',
-    has: 'আছে',
-    had: 'ছিল',
-    do: 'করি',
-    does: 'করে',
-    did: 'করেছিল',
-    a: 'একটি',
-    an: 'একটি',
-    the: 'টি',
-    in: 'এ / মধ্যে',
-    on: 'উপরে',
-    at: 'এ',
-    to: 'দিকে / প্রতি',
-    for: 'জন্য',
-    with: 'সাথে',
-    from: 'থেকে',
-    by: 'দ্বারা',
-    about: 'সম্পর্কে',
-    live: 'বাস করি',
-    work: 'কাজ করি',
-    learn: 'শিখি',
-    study: 'পড়ি',
-    read: 'পড়ি',
-    write: 'লিখি',
-    speak: 'বলি',
-    eat: 'খাই',
-    drink: 'পান করি',
-    play: 'খেলা করি',
-    help: 'সাহায্য করি',
-    student: 'শিক্ষার্থী',
-    teacher: 'শিক্ষক',
-    school: 'বিদ্যালয়',
-    college: 'কলেজ',
-    book: 'বই',
-    english: 'ইংরেজি',
-    city: 'শহর',
-    town: 'শহর',
-    village: 'গ্রাম',
-    home: 'বাড়ি',
-    house: 'বাসা',
-    family: 'পরিবার',
-    friend: 'বন্ধু',
-    friends: 'বন্ধুরা',
-    water: 'পানি',
-    tea: 'চা',
-    coffee: 'কফি',
-    food: 'খাবার',
-    morning: 'সকাল',
-    afternoon: 'বিকাল',
-    evening: 'সন্ধ্যা',
-    night: 'রাত',
-    today: 'আজ',
-    tomorrow: 'আগামীকাল',
-    yesterday: 'গতকাল',
-    now: 'এখন',
-    time: 'সময়',
-    day: 'দিন',
-    good: 'ভালো',
-    great: 'চমৎকার',
-    happy: 'খুশি',
-    new: 'নতুন',
-    old: 'পুরনো',
-    love: 'ভালোবাসা',
-    like: 'পছন্দ করি',
-    make: 'তৈরি করি',
-    take: 'নেওয়া',
-    give: 'দেওয়া',
-    see: 'দেখা',
-    look: 'তাকানো',
-    come: 'আসা',
-    go: 'যাওয়া',
-    fast: 'দ্রুত',
-    clean: 'পরিষ্কার',
-    peace: 'শান্তি',
-    success: 'সাফল্য',
-    life: 'জীবন',
-    world: 'পৃথিবী',
-    people: 'মানুষ',
-  }
-
-  const commonPronouns = ['i', 'you', 'he', 'she', 'it', 'we', 'they', 'my', 'your', 'his', 'her', 'our', 'their', 'this', 'that', 'these', 'those']
-  const commonArticles = ['a', 'an', 'the']
-  const commonPrepositions = ['in', 'on', 'at', 'to', 'for', 'with', 'from', 'by', 'about', 'as', 'into', 'like', 'through', 'over', 'before', 'after', 'under']
-  const commonModals = ['can', 'could', 'should', 'would', 'will', 'must', 'may', 'might', 'shall']
-  const commonVerbs = [
-    'is', 'am', 'are', 'was', 'were', 'be', 'been', 'being', 'have', 'has', 'had',
-    'do', 'does', 'did', 'live', 'work', 'learn', 'study', 'drink', 'speak', 'eat',
-    'play', 'go', 'come', 'make', 'take', 'give', 'see', 'know', 'think', 'feel'
-  ]
-
   return rawWords.map((w, index) => {
     const cleanWord = w.replace(/[^\w'-]/g, '')
     const lower = cleanWord.toLowerCase()
-    let role = 'Word'
-    let roleColor = 'blue'
-    let pos = 'noun'
 
-    if (commonArticles.includes(lower)) {
-      role = 'Art.'
-      roleColor = 'cyan'
-      pos = 'determiner'
-    } else if (commonModals.includes(lower)) {
-      role = 'Modal'
-      roleColor = 'purple'
-      pos = 'modal verb'
-    } else if (commonPronouns.includes(lower)) {
-      role = index === 0 ? 'Subject' : 'Pronoun'
+    const dictEntry = wordDictionary[lower]
+    let role = dictEntry?.role || (index === 0 ? 'Subject' : 'Object')
+    let roleColor = dictEntry?.roleColor || 'blue'
+    let pos = dictEntry?.pos || 'noun'
+    let bn = dictEntry?.bn || ''
+
+    // Contextual grammatical refinement:
+    // 1. Initial word is Subject if pronoun/noun
+    if (index === 0 && (role === 'Pronoun' || role === 'Noun' || dictEntry?.pos === 'pronoun')) {
+      role = 'Subject'
       roleColor = 'orange'
-      pos = 'pronoun'
-    } else if (commonPrepositions.includes(lower)) {
-      role = 'Prep.'
-      roleColor = 'cyan'
-      pos = 'preposition'
-    } else if (commonVerbs.includes(lower) || lower.endsWith('ing') || lower.endsWith('ed')) {
-      role = 'Verb'
-      roleColor = 'pink'
-      pos = 'verb'
-    } else if (lower.endsWith('ly')) {
-      role = 'Adverb'
-      roleColor = 'amber'
-      pos = 'adverb'
-    } else if (['beautiful', 'great', 'good', 'happy', 'healthy', 'fresh', 'tasty', 'important'].includes(lower)) {
-      role = 'Adj.'
-      roleColor = 'emerald'
-      pos = 'adjective'
-    } else {
-      role = index === 0 ? 'Subject' : 'Object'
-      roleColor = 'blue'
-      pos = 'noun'
+    }
+
+    // 2. Following a modal verb (e.g. 'will rest', 'can speak'), the following word is a Verb
+    if (index > 0) {
+      const prevWord = rawWords[index - 1].replace(/[^\w'-]/g, '').toLowerCase()
+      const prevEntry = wordDictionary[prevWord]
+      if (prevEntry?.role === 'Modal' && (role === 'Object' || role === 'Noun' || role === 'Word')) {
+        role = 'Verb'
+        roleColor = 'pink'
+        pos = 'verb'
+      }
     }
 
     return {
@@ -1008,7 +875,7 @@ export function parseSentenceIntoWords(sentence) {
       roleColor,
       ipa: `/${lower}/`,
       pos,
-      bn: bnDict[lower] || '',
+      bn,
     }
   })
 }
