@@ -4,6 +4,8 @@ import {
   generateSmartQueue,
   markExerciseCompleted,
   getCompletedCount,
+  getStreakData,
+  resetExerciseHistory,
 } from './utils/queueManager'
 import {
   playSentenceVoice,
@@ -16,20 +18,24 @@ import {
   playCelebrationSound,
 } from './utils/sound'
 import { Header } from './components/Header'
+import { CategoryBar } from './components/CategoryBar'
 import { WordChips } from './components/WordChips'
 import { PromptAudio } from './components/PromptAudio'
 import { TypingInput } from './components/TypingInput'
 import { ShortcutBar } from './components/ShortcutBar'
+import { Footer } from './components/Footer'
 import { LessonCompleteModal } from './components/LessonCompleteModal'
 import { LessonSelectorModal } from './components/LessonSelectorModal'
 import { CustomTextModal } from './components/CustomTextModal'
+import { AboutCreatorModal } from './components/AboutCreatorModal'
 
 export function App() {
-  // Practice Mode: 'auto' (smart randomized non-stop flow across all 49+ sentences) | 'lesson'
+  // Practice Mode: 'auto' (smart randomized non-stop flow across all 3,000+ sentences) | 'lesson'
   const [practiceMode, setPracticeMode] = useState('auto')
+  const [selectedCategory, setSelectedCategory] = useState('all')
 
-  // Smart Random Queue with persistence memory (never repeats recent exercises)
-  const [queue, setQueue] = useState(() => generateSmartQueue(ALL_EXERCISES))
+  // Smart Random Queue with persistence memory (never repeats recent exercises across sessions)
+  const [queue, setQueue] = useState(() => generateSmartQueue(ALL_EXERCISES, 'all'))
   const [queueIndex, setQueueIndex] = useState(0)
 
   // Specific course/lesson state (if user explicitly chooses from menu)
@@ -43,7 +49,7 @@ export function App() {
   const [isCompleted, setIsCompleted] = useState(false)
   const [feedbackMessage, setFeedbackMessage] = useState('')
 
-  // Metrics
+  // Metrics & Stats
   const [elapsedSeconds, setElapsedSeconds] = useState(0)
   const [isTimerRunning, setIsTimerRunning] = useState(false)
   const [score, setScore] = useState(100)
@@ -51,6 +57,7 @@ export function App() {
   const [totalKeypresses, setTotalKeypresses] = useState(0)
   const [correctKeypresses, setCorrectKeypresses] = useState(0)
   const [completedTotal, setCompletedTotal] = useState(() => getCompletedCount())
+  const [streakData, setStreakData] = useState(() => getStreakData())
 
   // Audio settings
   const [isMuted, setIsMuted] = useState(false)
@@ -64,6 +71,7 @@ export function App() {
   const [isLessonFinished, setIsLessonFinished] = useState(false)
   const [isLessonMenuOpen, setIsLessonMenuOpen] = useState(false)
   const [isCustomModalOpen, setIsCustomModalOpen] = useState(false)
+  const [isAboutCreatorOpen, setIsAboutCreatorOpen] = useState(false)
 
   // Active exercise depending on mode
   const currentExercise =
@@ -152,7 +160,7 @@ export function App() {
       if (queueIndex + 1 < queue.length) {
         setQueueIndex((prev) => prev + 1)
       } else {
-        const freshQueue = generateSmartQueue(ALL_EXERCISES)
+        const freshQueue = generateSmartQueue(ALL_EXERCISES, selectedCategory)
         setQueue(freshQueue)
         setQueueIndex(0)
       }
@@ -161,7 +169,7 @@ export function App() {
         setLessonExerciseIndex((prev) => prev + 1)
       }
     }
-  }, [practiceMode, queueIndex, queue.length, lessonExerciseIndex, currentLesson.exercises.length])
+  }, [practiceMode, queueIndex, queue.length, selectedCategory, lessonExerciseIndex, currentLesson.exercises.length])
 
   // Previous exercise handler
   const handlePreviousExercise = useCallback(() => {
@@ -185,10 +193,11 @@ export function App() {
     setCombo((prev) => prev + 1)
     setFeedbackMessage('Correct! +100 XP')
 
-    // Persist completed status in local storage
+    // Persist completed status in local storage & update streaks
     if (currentExercise?.id) {
       markExerciseCompleted(currentExercise.id)
       setCompletedTotal((prev) => prev + 1)
+      setStreakData(getStreakData())
     }
 
     // Auto-advance after 750ms so chime sound finishes smoothly
@@ -197,12 +206,12 @@ export function App() {
         if (queueIndex + 1 < queue.length) {
           setQueueIndex((prev) => prev + 1)
         } else {
-          // Finished entire cycle of 49 sentences! Generate fresh random round without stopping!
-          const freshQueue = generateSmartQueue(ALL_EXERCISES)
+          // Finished entire cycle! Generate fresh random round without stopping!
+          const freshQueue = generateSmartQueue(ALL_EXERCISES, selectedCategory)
           setQueue(freshQueue)
           setQueueIndex(0)
           playCelebrationSound(isMuted)
-          setFeedbackMessage('🎉 Awesome! All sentences completed! Starting next round!')
+          setFeedbackMessage('🎉 দারুণ! এই রাউন্ডের বাক্যগুলো শেষ হয়েছে!')
         }
       } else {
         if (lessonExerciseIndex + 1 < currentLesson.exercises.length) {
@@ -219,111 +228,90 @@ export function App() {
   // Super fluid character input
   const handleCharacterInput = (char) => {
     if (isCompleted || !targetSentence) return
-
     unlockAudio()
+
     if (!isTimerRunning) {
       setIsTimerRunning(true)
     }
 
-    const cleanTarget = targetSentence.trim().replace(/[.,?!]/g, '')
-    let currentIdx = typed.length
-    let nextExpected = cleanTarget[currentIdx]
-    if (!nextExpected) return
-
     setTotalKeypresses((prev) => prev + 1)
+    const expectedChar = targetSentence[typed.length]
 
-    // Case 1: Next character is a space between words
-    if (nextExpected === ' ') {
-      if (char === ' ') {
-        const newTyped = typed + ' '
-        setTyped(newTyped)
-        setCorrectKeypresses((prev) => prev + 1)
-        playKeySound(isMuted)
+    // Handle space: allow fluid progression if previous word was completed
+    if (char === ' ') {
+      if (expectedChar === ' ') {
         playWordSuccess(isMuted)
+        setCorrectKeypresses((prev) => prev + 1)
+        setTyped((prev) => prev + ' ')
+        setHasError(false)
         return
-      } else {
-        const nextCharAfterSpace = cleanTarget[currentIdx + 1]
-        if (nextCharAfterSpace && char.toLowerCase() === nextCharAfterSpace.toLowerCase()) {
-          const newTyped = typed + ' ' + nextCharAfterSpace
-          setTyped(newTyped)
-          setCorrectKeypresses((prev) => prev + 2)
-          playKeySound(isMuted)
-          playWordSuccess(isMuted)
-
-          if (newTyped.length >= cleanTarget.length) {
-            handleCompleteSentence()
-          }
-          return
-        }
       }
     }
 
-    // Case 2: Matching current letter
-    if (char.toLowerCase() === nextExpected.toLowerCase()) {
-      const newTyped = typed + nextExpected
-      setTyped(newTyped)
-      setCorrectKeypresses((prev) => prev + 1)
+    // Check match
+    if (char === expectedChar) {
       playKeySound(isMuted)
+      setCorrectKeypresses((prev) => prev + 1)
+      const nextTyped = typed + char
+      setTyped(nextTyped)
+      setHasError(false)
 
-      if (newTyped.length >= cleanTarget.length) {
+      if (nextTyped.length === targetSentence.length) {
         handleCompleteSentence()
-      } else {
-        if (cleanTarget[newTyped.length] === ' ') {
-          playWordSuccess(isMuted)
-        }
       }
     } else {
+      // Mismatch
       playErrorSound(isMuted)
       setHasError(true)
       setCombo(0)
-      setTimeout(() => setHasError(false), 250)
+      setScore((prev) => Math.max(0, prev - 10))
+      setFeedbackMessage('Mismatch! Press Backspace to fix')
     }
   }
 
-  // Backspace
+  // Backspace handler
   const handleBackspace = () => {
-    if (typed.length > 0 && !isCompleted) {
-      playKeySound(isMuted)
-      if (typed.endsWith(' ')) {
-        setTyped((prev) => prev.slice(0, -2))
-      } else {
-        setTyped((prev) => prev.slice(0, -1))
-      }
-    }
+    if (typed.length === 0 || isCompleted) return
+    setTyped((prev) => prev.slice(0, -1))
+    setHasError(false)
+    setFeedbackMessage('')
+    playKeySound(isMuted)
   }
 
-  // Hint for current word
+  // Hint word: auto-fill next word
   const handleHintWord = () => {
-    unlockAudio()
-    const cleanTarget = targetSentence.trim().replace(/[.,?!]/g, '')
-    const targetWordsList = cleanTarget.split(/\s+/)
-    const currentWordIdx = getCurrentWordIndex()
-    const currentWord = targetWordsList[currentWordIdx]
+    if (isCompleted || !targetSentence) return
+    const rawWords = targetSentence.trim().split(/\s+/)
+    let charCount = 0
 
-    if (currentWord) {
-      const prevWords = targetWordsList.slice(0, currentWordIdx)
-      const prefix = prevWords.length > 0 ? prevWords.join(' ') + ' ' : ''
-      const newTyped = prefix + currentWord + (currentWordIdx < targetWordsList.length - 1 ? ' ' : '')
-      setTyped(newTyped)
-      playWordSuccess(isMuted)
-
-      if (newTyped.length >= cleanTarget.length) {
-        handleCompleteSentence()
+    for (let i = 0; i < rawWords.length; i++) {
+      const wordLen = rawWords[i].length
+      if (typed.length < charCount + wordLen) {
+        const remainingInWord = targetSentence.slice(typed.length, charCount + wordLen)
+        setTyped((prev) => prev + remainingInWord)
+        setScore((prev) => Math.max(0, prev - 25))
+        setFeedbackMessage(`Hint applied: "${rawWords[i]}" (-25 XP)`)
+        playWordSuccess(isMuted)
+        return
       }
+      charCount += wordLen + 1
     }
   }
 
-  // Keyboard shortcut listener
+  // Keyboard Shortcuts (Tab to replay, Ctrl+Space for hint, Ctrl+H to toggle preview)
   useEffect(() => {
     const handleGlobalKey = (e) => {
+      // Tab to replay voice
       if (e.key === 'Tab') {
         e.preventDefault()
         handlePlayVoice()
       }
+      // Ctrl + Space for word hint
       if (e.ctrlKey && e.code === 'Space') {
         e.preventDefault()
         handleHintWord()
       }
+      // Ctrl + H to toggle preview
       if (e.ctrlKey && (e.key === 'h' || e.key === 'H')) {
         e.preventDefault()
         setIsPreviewHidden((prev) => !prev)
@@ -333,10 +321,24 @@ export function App() {
     return () => window.removeEventListener('keydown', handleGlobalKey)
   }, [handlePlayVoice])
 
+  // Select Category from Bar or Modal
+  const handleSelectCategory = (categoryId) => {
+    unlockAudio()
+    setSelectedCategory(categoryId)
+    setPracticeMode('auto')
+    const freshQueue = generateSmartQueue(ALL_EXERCISES, categoryId)
+    setQueue(freshQueue)
+    setQueueIndex(0)
+    setTyped('')
+    setIsCompleted(false)
+    setHasError(false)
+    setFeedbackMessage(`Loaded ${categoryId === 'all' ? 'All 3,000+' : categoryId} sentences!`)
+  }
+
   // Re-shuffle random sentences
   const handleShuffleAgain = () => {
     unlockAudio()
-    const freshQueue = generateSmartQueue(ALL_EXERCISES)
+    const freshQueue = generateSmartQueue(ALL_EXERCISES, selectedCategory)
     setQueue(freshQueue)
     setQueueIndex(0)
     setPracticeMode('auto')
@@ -361,6 +363,19 @@ export function App() {
     setIsCompleted(false)
     setFeedbackMessage('')
     setTimeout(() => handlePlayVoice(), 200)
+  }
+
+  // Reset Progress Handler
+  const handleResetProgress = () => {
+    if (window.confirm('আপনি কি সত্যিই আপনার পূর্বের সমস্ত অনুশীলন রেকর্ড রিসেট করতে চান?')) {
+      resetExerciseHistory()
+      setCompletedTotal(0)
+      const freshQueue = generateSmartQueue(ALL_EXERCISES, selectedCategory)
+      setQueue(freshQueue)
+      setQueueIndex(0)
+      setStreakData(getStreakData())
+      setFeedbackMessage('প্রগ্রেস সফলভাবে রিসেট করা হয়েছে!')
+    }
   }
 
   // Select specific lesson from modal
@@ -403,6 +418,12 @@ export function App() {
     }
   }
 
+  // Real-time speed and accuracy calculations
+  const wpm =
+    elapsedSeconds > 1 && correctKeypresses > 0
+      ? Math.round((correctKeypresses / 5) / (elapsedSeconds / 60))
+      : 0
+
   const accuracy =
     totalKeypresses > 0
       ? Math.max(10, Math.round((correctKeypresses / totalKeypresses) * 100))
@@ -417,15 +438,15 @@ export function App() {
       <Header
         courseTitle={
           practiceMode === 'auto'
-            ? currentExercise.courseTitle || 'TypeLingo Learning Zone'
+            ? currentExercise.category || 'TypeLingo Zone'
             : currentCourse.title
         }
         lessonTitle={
           practiceMode === 'auto'
-            ? currentExercise.lessonTitle || 'Daily Sentences'
+            ? currentExercise.category || '3,000+ Sentences'
             : currentLesson.title
         }
-        category={currentExercise.category || 'Practice'}
+        category={currentExercise.category || 'Daily Conversation'}
         currentIndex={practiceMode === 'auto' ? queueIndex : lessonExerciseIndex}
         totalExercises={
           practiceMode === 'auto' ? queue.length : currentLesson.exercises.length
@@ -434,6 +455,9 @@ export function App() {
         elapsedSeconds={elapsedSeconds}
         score={score}
         combo={combo}
+        wpm={wpm}
+        accuracy={accuracy}
+        streak={Math.max(1, streakData.streak || 1)}
         isMuted={isMuted}
         practiceMode={practiceMode}
         onToggleMute={() => setIsMuted(!isMuted)}
@@ -442,7 +466,17 @@ export function App() {
         onOpenCustomModal={() => setIsCustomModalOpen(true)}
         onShuffleAgain={handleShuffleAgain}
         onSwitchToAutoMode={handleSwitchToAutoMode}
+        onOpenAboutCreator={() => setIsAboutCreatorOpen(true)}
       />
+
+      {/* Category Pills Bar (Visible in continuous practice mode) */}
+      {practiceMode === 'auto' && (
+        <CategoryBar
+          selectedCategory={selectedCategory}
+          onSelectCategory={handleSelectCategory}
+          todayCompletedCount={streakData.todayCount || 0}
+        />
+      )}
 
       {/* 
         Main Practice Container - Auto-Centered with zero scrollbars:
@@ -487,6 +521,15 @@ export function App() {
         </div>
       </main>
 
+      {/* Modern Footer with Developer Attribution to Atikur Rahman */}
+      <Footer
+        completedTotal={completedTotal}
+        totalSentences={ALL_EXERCISES.length}
+        streak={streakData.streak}
+        onResetProgress={handleResetProgress}
+        onOpenAboutCreator={() => setIsAboutCreatorOpen(true)}
+      />
+
       {/* Lesson Complete Modal (only shown when a specific lesson ends) */}
       {isLessonFinished && (
         <LessonCompleteModal
@@ -506,12 +549,14 @@ export function App() {
         />
       )}
 
-      {/* Lesson Selector Modal */}
+      {/* Topic / Lesson Selector Modal with 17 categories and courses */}
       <LessonSelectorModal
         isOpen={isLessonMenuOpen}
         onClose={() => setIsLessonMenuOpen(false)}
         currentLessonId={currentLesson.id}
+        selectedCategory={selectedCategory}
         onSelectLesson={handleSelectLesson}
+        onSelectCategory={handleSelectCategory}
       />
 
       {/* Custom Text Modal */}
@@ -519,6 +564,12 @@ export function App() {
         isOpen={isCustomModalOpen}
         onClose={() => setIsCustomModalOpen(false)}
         onStartCustomLesson={handleStartCustomLesson}
+      />
+
+      {/* About Creator Modal (Atikur Rahman) */}
+      <AboutCreatorModal
+        isOpen={isAboutCreatorOpen}
+        onClose={() => setIsAboutCreatorOpen(false)}
       />
     </div>
   )

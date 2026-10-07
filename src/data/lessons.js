@@ -832,8 +832,11 @@ export const COURSES = [
   },
 ]
 
-// Auto-tagger for custom sentences with basic dictionary
+import sentences3000Data from './sentences_3000.json'
+
+// Auto-tagger for custom sentences with comprehensive dictionary
 export function parseSentenceIntoWords(sentence) {
+  if (!sentence) return []
   const clean = sentence.trim().replace(/\s+/g, ' ')
   const rawWords = clean.split(' ')
 
@@ -845,8 +848,12 @@ export function parseSentenceIntoWords(sentence) {
     we: 'আমরা',
     they: 'তারা',
     it: 'এটি',
+    this: 'এই',
+    that: 'ঐ',
+    these: 'এগুলো',
+    those: 'ওগুলো',
     my: 'আমার',
-    your: 'তোমার',
+    your: 'তোমার / আপনার',
     our: 'আমাদের',
     their: 'তাদের',
     his: 'তার',
@@ -856,48 +863,106 @@ export function parseSentenceIntoWords(sentence) {
     are: 'হয়',
     was: 'ছিল',
     were: 'ছিল',
-    will: 'করব',
+    will: 'করব / হবে',
     can: 'পারি',
     could: 'পারতাম',
     should: 'উচিত',
     must: 'অবশ্যই',
     would: 'করতাম',
     may: 'পারি',
+    might: 'হতে পারে',
     have: 'আছে',
     has: 'আছে',
+    had: 'ছিল',
+    do: 'করি',
+    does: 'করে',
+    did: 'করেছিল',
     a: 'একটি',
     an: 'একটি',
     the: 'টি',
-    in: 'এ',
+    in: 'এ / মধ্যে',
     on: 'উপরে',
     at: 'এ',
-    to: 'দিকে',
+    to: 'দিকে / প্রতি',
     for: 'জন্য',
     with: 'সাথে',
+    from: 'থেকে',
+    by: 'দ্বারা',
+    about: 'সম্পর্কে',
     live: 'বাস করি',
     work: 'কাজ করি',
     learn: 'শিখি',
     study: 'পড়ি',
+    read: 'পড়ি',
+    write: 'লিখি',
+    speak: 'বলি',
+    eat: 'খাই',
+    drink: 'পান করি',
+    play: 'খেলা করি',
+    help: 'সাহায্য করি',
     student: 'শিক্ষার্থী',
+    teacher: 'শিক্ষক',
+    school: 'বিদ্যালয়',
+    college: 'কলেজ',
+    book: 'বই',
     english: 'ইংরেজি',
     city: 'শহর',
     town: 'শহর',
+    village: 'গ্রাম',
+    home: 'বাড়ি',
+    house: 'বাসা',
+    family: 'পরিবার',
+    friend: 'বন্ধু',
+    friends: 'বন্ধুরা',
+    water: 'পানি',
+    tea: 'চা',
     coffee: 'কফি',
+    food: 'খাবার',
     morning: 'সকাল',
-    again: 'আবার',
+    afternoon: 'বিকাল',
+    evening: 'সন্ধ্যা',
+    night: 'রাত',
     today: 'আজ',
     tomorrow: 'আগামীকাল',
     yesterday: 'গতকাল',
+    now: 'এখন',
+    time: 'সময়',
+    day: 'দিন',
+    good: 'ভালো',
+    great: 'চমৎকার',
+    happy: 'খুশি',
+    new: 'নতুন',
+    old: 'পুরনো',
+    love: 'ভালোবাসা',
+    like: 'পছন্দ করি',
+    make: 'তৈরি করি',
+    take: 'নেওয়া',
+    give: 'দেওয়া',
+    see: 'দেখা',
+    look: 'তাকানো',
+    come: 'আসা',
+    go: 'যাওয়া',
+    fast: 'দ্রুত',
+    clean: 'পরিষ্কার',
+    peace: 'শান্তি',
+    success: 'সাফল্য',
+    life: 'জীবন',
+    world: 'পৃথিবী',
+    people: 'মানুষ',
   }
 
-  const commonPronouns = ['i', 'you', 'he', 'she', 'it', 'we', 'they', 'my', 'your', 'his', 'her', 'our', 'their']
+  const commonPronouns = ['i', 'you', 'he', 'she', 'it', 'we', 'they', 'my', 'your', 'his', 'her', 'our', 'their', 'this', 'that', 'these', 'those']
   const commonArticles = ['a', 'an', 'the']
-  const commonPrepositions = ['in', 'on', 'at', 'to', 'for', 'with', 'from', 'by', 'about', 'as', 'into', 'like']
-  const commonModals = ['can', 'could', 'should', 'would', 'will', 'must', 'may', 'might']
-  const commonVerbs = ['is', 'am', 'are', 'was', 'were', 'be', 'have', 'has', 'had', 'do', 'does', 'live', 'work', 'learn', 'drink', 'speak', 'eat', 'play']
+  const commonPrepositions = ['in', 'on', 'at', 'to', 'for', 'with', 'from', 'by', 'about', 'as', 'into', 'like', 'through', 'over', 'before', 'after', 'under']
+  const commonModals = ['can', 'could', 'should', 'would', 'will', 'must', 'may', 'might', 'shall']
+  const commonVerbs = [
+    'is', 'am', 'are', 'was', 'were', 'be', 'been', 'being', 'have', 'has', 'had',
+    'do', 'does', 'did', 'live', 'work', 'learn', 'study', 'drink', 'speak', 'eat',
+    'play', 'go', 'come', 'make', 'take', 'give', 'see', 'know', 'think', 'feel'
+  ]
 
   return rawWords.map((w, index) => {
-    const cleanWord = w.replace(/[^\w]/g, '')
+    const cleanWord = w.replace(/[^\w'-]/g, '')
     const lower = cleanWord.toLowerCase()
     let role = 'Word'
     let roleColor = 'blue'
@@ -927,6 +992,10 @@ export function parseSentenceIntoWords(sentence) {
       role = 'Adverb'
       roleColor = 'amber'
       pos = 'adverb'
+    } else if (['beautiful', 'great', 'good', 'happy', 'healthy', 'fresh', 'tasty', 'important'].includes(lower)) {
+      role = 'Adj.'
+      roleColor = 'emerald'
+      pos = 'adjective'
     } else {
       role = index === 0 ? 'Subject' : 'Object'
       roleColor = 'blue'
@@ -944,8 +1013,8 @@ export function parseSentenceIntoWords(sentence) {
   })
 }
 
-// Flat master list of all 49+ exercises across all courses and categories
-export const ALL_EXERCISES = COURSES.flatMap((course) =>
+// Flat list of original course exercises
+export const COURSE_EXERCISES = COURSES.flatMap((course) =>
   course.lessons.flatMap((lesson) =>
     lesson.exercises.map((ex) => ({
       ...ex,
@@ -953,7 +1022,41 @@ export const ALL_EXERCISES = COURSES.flatMap((course) =>
       courseTitle: course.title,
       lessonId: lesson.id,
       lessonTitle: lesson.title,
-      category: course.badge || course.title,
+      category: course.badge || 'Daily Conversation',
     }))
   )
 )
+
+// Master list of 3,000 Common Sentences with lazy word generation
+export const SENTENCES_3000 = sentences3000Data.map((s, idx) => ({
+  id: s.id || `s-${idx + 1}`,
+  sentence: s.sentence,
+  bengaliMeaning: s.bengaliMeaning,
+  category: s.category || 'Daily Phrases',
+  difficulty: s.difficulty || 'Easy',
+  audioUrl: null,
+  get words() {
+    if (!this._words) {
+      this._words = parseSentenceIntoWords(this.sentence)
+    }
+    return this._words
+  },
+}))
+
+// Master pool of concise, high-impact practice exercises (3,000 sentences)
+export const ALL_EXERCISES = SENTENCES_3000
+
+// Category metadata with icons, colors & counts for UI category selector
+export const CATEGORIES_SUMMARY = [
+  { id: 'all', name: 'All Sentences', bn: 'সব বাক্য (৩,০০০টি)', count: 3000, color: 'indigo' },
+  { id: 'daily-challenge', name: 'Daily 10 Challenge', bn: 'আজকের ১০টি চ্যালেঞ্জ 🔥', count: 10, color: 'amber' },
+  { id: 'Modal Verbs', name: 'Modal Verbs', bn: 'মডাল ভার্বস (Can, Should, Must)', count: 870, color: 'sky' },
+  { id: 'Tense: Present', name: 'Present Tense', bn: 'বর্তমান কাল', count: 777, color: 'teal' },
+  { id: 'Tense: Future', name: 'Future Tense', bn: 'ভবিষ্যত কাল', count: 601, color: 'violet' },
+  { id: 'Tense: Past', name: 'Past Tense', bn: 'অতীত কাল', count: 584, color: 'amber' },
+  { id: 'Questions', name: 'Questions', bn: 'প্রশ্ন ও জিজ্ঞাসা', count: 84, color: 'emerald' },
+  { id: 'Daily Phrases', name: 'Daily Phrases', bn: 'প্রয়োজনীয় ফ্রেজ ও কথা', count: 50, color: 'blue' },
+  { id: 'Work & Office', name: 'Work & Office', bn: 'অফিস ও কাজের কথা', count: 20, color: 'slate' },
+  { id: 'Short Quotes', name: 'Short Quotes', bn: 'ছোট অনুপ্রেরণামূলক উক্তি', count: 14, color: 'pink' },
+]
+

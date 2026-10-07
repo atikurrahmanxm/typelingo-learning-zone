@@ -123,15 +123,7 @@ export function TypingInput({
             </div>
           )
         })}
-
-        {/* Punctuation dot */}
-        <span className="text-3xl sm:text-4xl md:text-5xl font-bold text-slate-400 pb-1">.</span>
       </div>
-
-      {/* Helper text */}
-      <p className="text-xs sm:text-sm text-slate-400 text-center mt-3 tracking-normal">
-        Space: next word, or submit when all words are filled. Punctuation is optional.
-      </p>
     </div>
   )
 }

@@ -1,26 +1,27 @@
 import React from 'react'
 import {
-  ChevronLeft,
-  Sliders,
   Volume2,
   VolumeX,
   RotateCcw,
-  Clock,
   Flame,
   Shuffle,
-  Sparkles,
+  Zap,
+  Target,
+  SlidersHorizontal,
+  UserCheck,
 } from 'lucide-react'
 
 export function Header({
   lessonTitle = 'Say Your Name and Role',
   courseTitle = 'Restart English',
-  category = 'Present',
+  category = 'Daily Conversation',
   currentIndex = 0,
-  totalExercises = 49,
+  totalExercises = 3000,
   completedTotal = 0,
-  elapsedSeconds = 15,
-  score = 300,
-  combo = 0,
+  elapsedSeconds = 0,
+  wpm = 0,
+  accuracy = 100,
+  streak = 1,
   isMuted = false,
   practiceMode = 'auto',
   onToggleMute,
@@ -28,157 +29,135 @@ export function Header({
   onRestartCurrentLesson,
   onOpenCustomModal,
   onShuffleAgain,
-  onSwitchToAutoMode,
+  onOpenAboutCreator,
 }) {
-  const formatTime = (secs) => {
-    const mins = Math.floor(secs / 60)
-    const s = secs % 60
-    return `${mins.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`
-  }
-
   const progressPercent =
     totalExercises > 0 ? ((currentIndex + 1) / totalExercises) * 100 : 0
 
   return (
-    <header className="w-full bg-white border-b border-slate-200/80 sticky top-0 z-30 select-none shadow-xs">
-      {/* Row 1: Course navigation, Lesson Title and Tools */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-8 py-2.5 flex items-center justify-between">
-        {/* Left: Brand Logo & Mode Indicator */}
-        <div className="flex items-center gap-2.5">
-          <div className="flex items-center gap-1.5 mr-1">
-            <span className="font-black text-base sm:text-lg tracking-tight bg-gradient-to-r from-indigo-600 to-violet-600 bg-clip-text text-transparent">
-              TypeLingo
-            </span>
-            <span className="text-[10px] font-bold text-indigo-700 bg-indigo-50 px-1.5 py-0.5 rounded border border-indigo-200/80 uppercase tracking-wider hidden sm:inline-block">
-              Zone
-            </span>
-          </div>
-
-          {practiceMode === 'auto' ? (
-            <button
-              onClick={onShuffleAgain}
-              className="flex items-center gap-1.5 text-xs sm:text-sm font-bold text-indigo-700 bg-indigo-50/80 hover:bg-indigo-100 border border-indigo-200/90 px-2.5 sm:px-3 py-1.5 rounded-xl transition-all shadow-2xs hover:scale-102"
-              title="Reshuffle all 49 sentences randomly"
-            >
-              <Shuffle className="w-3.5 h-3.5 text-indigo-600 animate-spin-slow" />
-              <span>Smart Random (অটোমেটিক)</span>
-            </button>
-          ) : (
-            <button
-              onClick={onSwitchToAutoMode}
-              className="flex items-center gap-1.5 text-xs sm:text-sm font-semibold text-indigo-600 bg-indigo-50 hover:bg-indigo-100 px-2.5 sm:px-3 py-1.5 rounded-xl border border-indigo-200 transition-colors"
-              title="Switch back to non-stop automatic practice"
-            >
-              <Sparkles className="w-3.5 h-3.5" />
-              <span>Go to Auto Mode</span>
-            </button>
-          )}
-
+    <header className="w-full bg-white border-b border-slate-200/80 sticky top-0 z-30 select-none">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between gap-3">
+        {/* Left: Brand + Category / Progress Counter */}
+        <div className="flex items-center gap-2.5 sm:gap-3">
           <button
             onClick={onOpenLessonMenu}
-            className="flex items-center gap-1 text-xs font-semibold text-slate-500 hover:text-indigo-600 px-2 py-1.5 rounded-lg hover:bg-slate-50 transition-colors hidden md:flex"
-            title="Choose specific topic"
+            className="flex items-center gap-1.5 focus:outline-none"
+            title="Browse all topics"
           >
-            <ChevronLeft className="w-3.5 h-3.5" />
-            <span>Topics</span>
+            <span className="font-extrabold text-base tracking-tight bg-gradient-to-r from-indigo-600 to-violet-600 bg-clip-text text-transparent">
+              TypeLingo
+            </span>
           </button>
-        </div>
 
-        {/* Center: Topic Tag & Exercise Counter */}
-        <div className="flex items-center gap-2 sm:gap-2.5">
-          <span className="text-xs sm:text-sm font-bold text-slate-700 bg-slate-100 px-2.5 sm:px-3 py-1 rounded-lg border border-slate-200/70 line-clamp-1">
-            {courseTitle || lessonTitle}
-          </span>
-          <span className="text-xs font-bold text-indigo-700 bg-indigo-50/90 px-2.5 py-1 rounded-lg border border-indigo-200/80">
+          <span className="h-3.5 w-px bg-slate-200 hidden sm:inline-block" />
+
+          {/* Current Topic Badge (Clickable to switch) */}
+          <button
+            onClick={onOpenLessonMenu}
+            className="flex items-center gap-1.5 text-xs font-semibold text-slate-700 hover:text-indigo-600 bg-slate-100 hover:bg-slate-200/70 px-2.5 py-1 rounded-lg transition-colors max-w-[130px] sm:max-w-[200px] truncate"
+            title="টপিক বা ক্যাটাগরি পরিবর্তন করুন"
+          >
+            <span className="truncate">{category || courseTitle || lessonTitle}</span>
+          </button>
+
+          {/* Minimal Exercise Counter */}
+          <span className="text-xs font-semibold text-slate-400 whitespace-nowrap">
             {currentIndex + 1} / {totalExercises}
           </span>
         </div>
 
-        {/* Right: Theme, Settings, Volume */}
-        <div className="flex items-center gap-2">
-          <button
-            onClick={onOpenCustomModal}
-            className="text-xs font-semibold text-indigo-700 bg-indigo-50/80 hover:bg-indigo-100 border border-indigo-200/80 px-2.5 py-1.5 rounded-lg transition-colors hidden sm:inline-block"
-            title="Add custom sentence"
+        {/* Center: Live Performance (WPM, Accuracy, Streak) */}
+        <div className="flex items-center gap-2.5 sm:gap-4 font-mono text-xs sm:text-sm">
+          {/* WPM */}
+          <div
+            className="flex items-center gap-1 text-indigo-700 bg-indigo-50/80 px-2.5 py-1 rounded-lg font-bold"
+            title="Words Per Minute"
           >
-            + Custom
+            <Zap className="w-3.5 h-3.5 text-indigo-600" />
+            <span>
+              {wpm} <span className="text-[10px] uppercase font-sans font-medium text-indigo-500">wpm</span>
+            </span>
+          </div>
+
+          {/* Accuracy */}
+          <div
+            className="flex items-center gap-1 text-emerald-700 bg-emerald-50/80 px-2.5 py-1 rounded-lg font-bold"
+            title="Accuracy"
+          >
+            <Target className="w-3.5 h-3.5 text-emerald-600" />
+            <span>{accuracy}%</span>
+          </div>
+
+          {/* Streak */}
+          <div
+            className="hidden sm:flex items-center gap-1 text-amber-700 bg-amber-50 px-2 py-1 rounded-lg font-bold text-xs"
+            title={`${streak} দিনের স্ট্রিক`}
+          >
+            <Flame className="w-3.5 h-3.5 text-amber-500 fill-amber-500" />
+            <span>{streak}d</span>
+          </div>
+        </div>
+
+        {/* Right: Quick Action Controls */}
+        <div className="flex items-center gap-1 sm:gap-1.5">
+          {/* Restart Button */}
+          <button
+            onClick={onRestartCurrentLesson}
+            className="p-1.5 text-slate-400 hover:text-slate-700 hover:bg-slate-100 rounded-lg transition-colors"
+            title="পুনরায় শুরু করুন (Restart)"
+          >
+            <RotateCcw className="w-4 h-4" />
           </button>
 
+          {/* Shuffle / Next Random Sentence */}
           <button
-            onClick={onOpenLessonMenu}
-            className="p-1.5 text-slate-400 hover:text-slate-600 rounded-lg hover:bg-slate-100 transition-colors"
-            title="Browse all topics & tenses"
+            onClick={onShuffleAgain}
+            className="p-1.5 text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors"
+            title="নতুন বাক্য এলোমেলো করুন (Shuffle)"
           >
-            <Sliders className="w-4 h-4" />
+            <Shuffle className="w-4 h-4" />
           </button>
 
+          {/* Sound Mute/Unmute */}
           <button
             onClick={onToggleMute}
             className={`p-1.5 rounded-lg transition-colors ${
               isMuted
                 ? 'text-rose-500 hover:bg-rose-50'
-                : 'text-slate-500 hover:text-indigo-600 hover:bg-indigo-50/50'
+                : 'text-slate-400 hover:text-indigo-600 hover:bg-slate-100'
             }`}
-            title={isMuted ? 'Unmute' : 'Mute'}
+            title={isMuted ? 'শব্দ চালু করুন (Unmute)' : 'শব্দ বন্ধ করুন (Mute)'}
           >
             {isMuted ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
           </button>
-        </div>
-      </div>
 
-      {/* Row 2: Slim Progress bar */}
-      <div className="w-full bg-slate-100 h-1 relative overflow-hidden">
-        <div
-          className="bg-gradient-to-r from-indigo-500 via-indigo-600 to-violet-600 h-full rounded-r-full transition-all duration-300"
-          style={{ width: `${Math.max(2, progressPercent)}%` }}
-        />
-      </div>
-
-      {/* Row 3: Meta metrics (Practice time, Score, Combo) */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-8 py-1.5 flex items-center justify-between text-xs sm:text-sm text-slate-500">
-        <div className="flex items-center gap-2">
+          {/* All Topics Drawer */}
           <button
-            onClick={onRestartCurrentLesson}
-            className="p-1 hover:text-slate-700 hover:bg-slate-100 rounded transition-colors flex items-center gap-1.5 text-xs font-medium text-slate-500"
-            title="Restart exercise"
+            onClick={onOpenLessonMenu}
+            className="p-1.5 text-slate-400 hover:text-slate-700 hover:bg-slate-100 rounded-lg transition-colors"
+            title="সব টপিক ও লেসন (Browse Lessons)"
           >
-            <RotateCcw className="w-3.5 h-3.5 text-slate-400" />
-            <span>Restart</span>
+            <SlidersHorizontal className="w-4 h-4" />
           </button>
 
-          {completedTotal > 0 && (
-            <span className="text-xs text-emerald-600 font-semibold bg-emerald-50 px-2 py-0.5 rounded-md border border-emerald-200/60 hidden sm:inline-block">
-              ✓ {completedTotal} Solved
-            </span>
-          )}
+          {/* Dev Attribution */}
+          <button
+            onClick={onOpenAboutCreator}
+            className="hidden lg:flex items-center gap-1 text-xs font-semibold text-slate-500 hover:text-indigo-600 hover:bg-slate-100 px-2 py-1 rounded-lg transition-colors ml-1"
+            title="Developer: Atikur Rahman"
+          >
+            <UserCheck className="w-3.5 h-3.5 text-indigo-600" />
+            <span className="text-[11px]">Atikur</span>
+          </button>
         </div>
+      </div>
 
-        <div className="flex items-center gap-4 sm:gap-6 font-mono text-xs sm:text-sm">
-          <div className="flex items-center gap-1.5">
-            <Clock className="w-3.5 h-3.5 text-slate-400" />
-            <span>
-              Time{' '}
-              <strong className="text-slate-700 font-semibold">
-                {formatTime(elapsedSeconds)}
-              </strong>
-            </span>
-          </div>
-
-          <div className="flex items-center gap-1.5">
-            <span>
-              Score{' '}
-              <strong className="text-slate-700 font-semibold">{score}</strong>
-            </span>
-          </div>
-
-          <div className="flex items-center gap-1.5">
-            <Flame className="w-3.5 h-3.5 text-amber-500" />
-            <span>
-              Combo{' '}
-              <strong className="text-slate-700 font-semibold">{combo}</strong>
-            </span>
-          </div>
-        </div>
+      {/* Slim 2px Progress Line at the bottom edge */}
+      <div className="w-full bg-slate-100 h-[2px] relative overflow-hidden">
+        <div
+          className="bg-indigo-600 h-full transition-all duration-300"
+          style={{ width: `${Math.max(1, progressPercent)}%` }}
+        />
       </div>
     </header>
   )

@@ -31,12 +31,7 @@ export function PromptAudio({ isSpeaking, onReplay, feedbackMessage }) {
         </div>
       </button>
 
-      {/* Main Instruction Text matching cohesive typography */}
-      <h3 className="text-base sm:text-lg md:text-xl font-bold text-slate-700 tracking-tight mt-1">
-        Listen and write what you hear
-      </h3>
-
-      {/* Floating feedback alert */}
+      {/* Floating feedback alert (only when active) */}
       {feedbackMessage && (
         <div className="mt-2 text-xs sm:text-sm font-bold text-indigo-700 bg-indigo-50 border border-indigo-200/80 px-3.5 py-1 rounded-full animate-pop-in shadow-2xs">
           {feedbackMessage}
