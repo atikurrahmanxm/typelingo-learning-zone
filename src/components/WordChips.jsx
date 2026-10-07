@@ -1,33 +1,34 @@
 import React from 'react'
 import { Check } from 'lucide-react'
 
+// Sophisticated, harmonious semantic palette for grammar tokens
 const ROLE_BADGE_STYLES = {
   orange: {
-    badge: 'bg-orange-50 text-orange-600 border-orange-200',
-    activeGlow: 'ring-orange-400/20',
+    badge: 'bg-amber-50 text-amber-700 border-amber-200/80',
+    activeGlow: 'ring-amber-400/20',
   },
   pink: {
-    badge: 'bg-pink-50 text-pink-600 border-pink-200',
-    activeGlow: 'ring-pink-400/20',
+    badge: 'bg-rose-50 text-rose-600 border-rose-200/80',
+    activeGlow: 'ring-rose-400/20',
   },
   cyan: {
-    badge: 'bg-cyan-50 text-cyan-600 border-cyan-200',
-    activeGlow: 'ring-cyan-400/20',
+    badge: 'bg-sky-50 text-sky-700 border-sky-200/80',
+    activeGlow: 'ring-sky-400/20',
   },
   blue: {
-    badge: 'bg-blue-50 text-blue-600 border-blue-200',
-    activeGlow: 'ring-blue-400/20',
+    badge: 'bg-indigo-50 text-indigo-700 border-indigo-200/80',
+    activeGlow: 'ring-indigo-400/20',
   },
   emerald: {
-    badge: 'bg-emerald-50 text-emerald-600 border-emerald-200',
+    badge: 'bg-emerald-50 text-emerald-700 border-emerald-200/80',
     activeGlow: 'ring-emerald-400/20',
   },
   amber: {
-    badge: 'bg-amber-50 text-amber-600 border-amber-200',
+    badge: 'bg-amber-50 text-amber-700 border-amber-200/80',
     activeGlow: 'ring-amber-400/20',
   },
   purple: {
-    badge: 'bg-purple-50 text-purple-600 border-purple-200',
+    badge: 'bg-purple-50 text-purple-700 border-purple-200/80',
     activeGlow: 'ring-purple-400/20',
   },
 }
@@ -85,7 +86,7 @@ export function WordChips({
       */}
       {bengaliMeaning && (
         <div className="text-center mb-5 sm:mb-7 px-4">
-          <span className="text-xs sm:text-sm text-slate-400 font-normal mr-2.5 font-siliguri">
+          <span className="text-xs sm:text-sm text-slate-400 font-medium mr-2 font-siliguri">
             বাংলা অর্থ:
           </span>
           <span className="text-2xl sm:text-3xl md:text-4xl lg:text-[40px] font-extrabold text-slate-900 font-siliguri tracking-normal leading-snug">
@@ -98,10 +99,10 @@ export function WordChips({
         Clean & Modern Word Cards Sector:
         - Auto-scales seamlessly to fit 4 to 7+ word sentences without horizontal scrollbars
         - Ample vertical padding so active card elevation and top dot never clip
-        - Uses .no-scrollbar to hide any default browser scrollbars
+        - Cohesive modern Indigo & Slate color scheme
       */}
       <div className="w-full flex justify-center px-1">
-        <div className={`bg-slate-100/70 pt-3.5 sm:pt-4 pb-2.5 sm:pb-3 px-2 sm:px-3 rounded-3xl border border-slate-200/80 shadow-[0_4px_25px_rgba(0,0,0,0.03)] inline-flex items-stretch justify-center ${config.gap} max-w-full overflow-x-auto no-scrollbar`}>
+        <div className={`bg-slate-100/60 pt-3.5 sm:pt-4 pb-2.5 sm:pb-3 px-2 sm:px-3 rounded-3xl border border-slate-200/70 shadow-[0_4px_25px_rgba(0,0,0,0.02)] inline-flex items-stretch justify-center ${config.gap} max-w-full overflow-x-auto no-scrollbar`}>
           {words.map((item, idx) => {
             const isCurrent = idx === currentWordIndex
             const isDone = completedWordIndices.includes(idx)
@@ -112,15 +113,15 @@ export function WordChips({
                 key={idx}
                 className={`flex flex-col items-center justify-between ${config.cardClass} rounded-2xl border transition-all duration-300 relative select-none flex-shrink-0 ${
                   isCurrent
-                    ? 'bg-white border-purple-400 shadow-md ring-4 ring-purple-500/10 -translate-y-1'
+                    ? 'bg-white border-indigo-500 shadow-md ring-4 ring-indigo-500/15 -translate-y-1'
                     : isDone
-                    ? 'bg-white/95 border-emerald-200 shadow-xs'
-                    : 'bg-white border-slate-200/70 shadow-xs hover:border-slate-300'
+                    ? 'bg-white border-emerald-300/80 shadow-2xs'
+                    : 'bg-white border-slate-200/80 shadow-2xs hover:border-slate-300'
                 }`}
               >
                 {/* Active Indicator Top Dot (centered on top edge, zero clipping) */}
                 {isCurrent && (
-                  <span className="absolute top-0 -translate-y-1/2 left-1/2 -translate-x-1/2 w-3 h-3 bg-purple-600 rounded-full ring-4 ring-purple-100 shadow-sm animate-pulse-slow z-10" />
+                  <span className="absolute top-0 -translate-y-1/2 left-1/2 -translate-x-1/2 w-3 h-3 bg-indigo-600 rounded-full ring-4 ring-indigo-100 shadow-xs animate-pulse-slow z-10" />
                 )}
 
                 {/* 1. Grammar Role Pill */}
@@ -137,7 +138,7 @@ export function WordChips({
                   <span
                     className={`font-extrabold tracking-tight transition-colors ${config.wordText} ${
                       isCurrent
-                        ? 'text-purple-900'
+                        ? 'text-indigo-950'
                         : isDone
                         ? 'text-emerald-700'
                         : 'text-slate-800'
@@ -155,9 +156,9 @@ export function WordChips({
                   <div
                     className={`font-bold font-siliguri rounded-lg border transition-colors my-1 ${config.meaningText} ${
                       isCurrent
-                        ? 'bg-purple-50 text-purple-700 border-purple-200'
+                        ? 'bg-indigo-50 text-indigo-700 border-indigo-200/80'
                         : isDone
-                        ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
+                        ? 'bg-emerald-50 text-emerald-700 border-emerald-200/80'
                         : 'bg-slate-50 text-slate-700 border-slate-200/60'
                     }`}
                   >

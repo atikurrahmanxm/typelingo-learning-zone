@@ -411,7 +411,7 @@ export function App() {
   return (
     <div
       onClick={unlockAudio}
-      className="min-h-screen flex flex-col justify-between bg-[#F3F4F8] text-slate-800 antialiased font-sans select-none overflow-x-hidden"
+      className="min-h-screen flex flex-col justify-between bg-[#F8FAFC] text-slate-800 antialiased font-sans select-none overflow-x-hidden"
     >
       {/* Top Header */}
       <Header

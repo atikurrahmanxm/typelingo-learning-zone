@@ -81,9 +81,9 @@ export function TypingInput({
               key={wordIndex}
               className={`flex items-center gap-[6px] sm:gap-[9px] pb-1 border-b-[3px] sm:border-b-4 transition-all duration-150 ${
                 isWordActive
-                  ? 'border-purple-600 bg-purple-50/40 px-2 sm:px-2.5 rounded-t-lg'
+                  ? 'border-indigo-600 bg-indigo-50/50 px-2 sm:px-2.5 rounded-t-lg shadow-2xs'
                   : isWordCompleted
-                  ? 'border-emerald-500 bg-emerald-50/20 px-2 sm:px-2.5 rounded-t-lg'
+                  ? 'border-emerald-500 bg-emerald-50/25 px-2 sm:px-2.5 rounded-t-lg'
                   : 'border-slate-300 px-2'
               }`}
             >
@@ -106,7 +106,7 @@ export function TypingInput({
                   >
                     {/* Blinking cursor */}
                     {isCharCurrent && !isCompleted && (
-                      <span className="absolute -top-1 bottom-1 w-[3px] sm:w-[3.5px] bg-purple-600 rounded-full animate-cursor" />
+                      <span className="absolute -top-1 bottom-1 w-[3px] sm:w-[3.5px] bg-indigo-600 rounded-full animate-cursor" />
                     )}
 
                     {/* Character or light underline dash */}

@@ -77,7 +77,7 @@ export function ShortcutBar({
 
       {/* Right Mascot */}
       <div className="flex items-center gap-2 text-slate-400">
-        <Ghost className="w-5 h-5 sm:w-6 sm:h-6 text-slate-400 hover:text-purple-500 transition-colors" />
+        <Ghost className="w-5 h-5 sm:w-6 sm:h-6 text-slate-300 hover:text-indigo-600 transition-colors" />
       </div>
     </div>
   )

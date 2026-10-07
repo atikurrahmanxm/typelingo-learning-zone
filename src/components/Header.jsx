@@ -46,10 +46,10 @@ export function Header({
         {/* Left: Brand Logo & Mode Indicator */}
         <div className="flex items-center gap-2.5">
           <div className="flex items-center gap-1.5 mr-1">
-            <span className="font-extrabold text-base sm:text-lg tracking-tight bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent">
+            <span className="font-black text-base sm:text-lg tracking-tight bg-gradient-to-r from-indigo-600 to-violet-600 bg-clip-text text-transparent">
               TypeLingo
             </span>
-            <span className="text-[10px] font-bold text-purple-700 bg-purple-50 px-1.5 py-0.5 rounded border border-purple-200 uppercase tracking-wider hidden sm:inline-block">
+            <span className="text-[10px] font-bold text-indigo-700 bg-indigo-50 px-1.5 py-0.5 rounded border border-indigo-200/80 uppercase tracking-wider hidden sm:inline-block">
               Zone
             </span>
           </div>
@@ -57,16 +57,16 @@ export function Header({
           {practiceMode === 'auto' ? (
             <button
               onClick={onShuffleAgain}
-              className="flex items-center gap-1.5 text-xs sm:text-sm font-bold text-purple-700 bg-purple-50 hover:bg-purple-100 border border-purple-200/80 px-2.5 sm:px-3 py-1.5 rounded-xl transition-all shadow-2xs hover:scale-102"
+              className="flex items-center gap-1.5 text-xs sm:text-sm font-bold text-indigo-700 bg-indigo-50/80 hover:bg-indigo-100 border border-indigo-200/90 px-2.5 sm:px-3 py-1.5 rounded-xl transition-all shadow-2xs hover:scale-102"
               title="Reshuffle all 49 sentences randomly"
             >
-              <Shuffle className="w-3.5 h-3.5 text-purple-600 animate-spin-slow" />
+              <Shuffle className="w-3.5 h-3.5 text-indigo-600 animate-spin-slow" />
               <span>Smart Random (অটোমেটিক)</span>
             </button>
           ) : (
             <button
               onClick={onSwitchToAutoMode}
-              className="flex items-center gap-1.5 text-xs sm:text-sm font-semibold text-purple-600 bg-purple-50 hover:bg-purple-100 px-2.5 sm:px-3 py-1.5 rounded-xl border border-purple-200 transition-colors"
+              className="flex items-center gap-1.5 text-xs sm:text-sm font-semibold text-indigo-600 bg-indigo-50 hover:bg-indigo-100 px-2.5 sm:px-3 py-1.5 rounded-xl border border-indigo-200 transition-colors"
               title="Switch back to non-stop automatic practice"
             >
               <Sparkles className="w-3.5 h-3.5" />
@@ -76,7 +76,7 @@ export function Header({
 
           <button
             onClick={onOpenLessonMenu}
-            className="flex items-center gap-1 text-xs font-semibold text-slate-500 hover:text-purple-600 px-2 py-1.5 rounded-lg hover:bg-slate-50 transition-colors hidden md:flex"
+            className="flex items-center gap-1 text-xs font-semibold text-slate-500 hover:text-indigo-600 px-2 py-1.5 rounded-lg hover:bg-slate-50 transition-colors hidden md:flex"
             title="Choose specific topic"
           >
             <ChevronLeft className="w-3.5 h-3.5" />
@@ -89,7 +89,7 @@ export function Header({
           <span className="text-xs sm:text-sm font-bold text-slate-700 bg-slate-100 px-2.5 sm:px-3 py-1 rounded-lg border border-slate-200/70 line-clamp-1">
             {courseTitle || lessonTitle}
           </span>
-          <span className="text-xs font-bold text-purple-700 bg-purple-50 px-2.5 py-1 rounded-lg border border-purple-200">
+          <span className="text-xs font-bold text-indigo-700 bg-indigo-50/90 px-2.5 py-1 rounded-lg border border-indigo-200/80">
             {currentIndex + 1} / {totalExercises}
           </span>
         </div>
@@ -98,7 +98,7 @@ export function Header({
         <div className="flex items-center gap-2">
           <button
             onClick={onOpenCustomModal}
-            className="text-xs font-semibold text-slate-600 bg-slate-50 hover:bg-slate-100 border border-slate-200 px-2.5 py-1.5 rounded-lg transition-colors hidden sm:inline-block"
+            className="text-xs font-semibold text-indigo-700 bg-indigo-50/80 hover:bg-indigo-100 border border-indigo-200/80 px-2.5 py-1.5 rounded-lg transition-colors hidden sm:inline-block"
             title="Add custom sentence"
           >
             + Custom
@@ -116,8 +116,8 @@ export function Header({
             onClick={onToggleMute}
             className={`p-1.5 rounded-lg transition-colors ${
               isMuted
-                ? 'text-red-500 hover:bg-red-50'
-                : 'text-slate-500 hover:text-purple-600 hover:bg-slate-100'
+                ? 'text-rose-500 hover:bg-rose-50'
+                : 'text-slate-500 hover:text-indigo-600 hover:bg-indigo-50/50'
             }`}
             title={isMuted ? 'Unmute' : 'Mute'}
           >
@@ -129,7 +129,7 @@ export function Header({
       {/* Row 2: Slim Progress bar */}
       <div className="w-full bg-slate-100 h-1 relative overflow-hidden">
         <div
-          className="bg-gradient-to-r from-purple-500 to-indigo-600 h-full rounded-r-full transition-all duration-300"
+          className="bg-gradient-to-r from-indigo-500 via-indigo-600 to-violet-600 h-full rounded-r-full transition-all duration-300"
           style={{ width: `${Math.max(2, progressPercent)}%` }}
         />
       </div>
