@@ -22,13 +22,13 @@ export function TypingInput({
     }
   }
 
-  // Parse words cleanly
-  const targetWords = targetSentence.trim().replace(/[.,?!]/g, '').split(/\s+/)
+  // Parse words with their punctuation preserved
+  const targetWords = targetSentence.trim().split(/\s+/)
 
   return (
     <div
       onClick={handleClickArea}
-      className="w-full max-w-4xl mx-auto my-4 sm:my-6 flex flex-col items-center justify-center cursor-text select-none"
+      className="w-full max-w-5xl mx-auto my-2 sm:my-4 flex flex-col items-center justify-center cursor-text select-none"
     >
       {/* Hidden input to receive keyboard events */}
       <input
@@ -50,6 +50,12 @@ export function TypingInput({
             return
           }
 
+          if (e.key === 'Enter') {
+            e.preventDefault()
+            onCharacterInput(' ') // triggers space / completion logic
+            return
+          }
+
           if (e.key === 'Tab') {
             return
           }
@@ -66,7 +72,7 @@ export function TypingInput({
         Clear, Big & Distinct Word-by-Word Slots with Underlines:
         Scales up smoothly on desktop displays (1080p, 2K, 4K)
       */}
-      <div className="flex flex-wrap items-end justify-center gap-x-5 sm:gap-x-8 md:gap-x-10 gap-y-3 sm:gap-y-4 py-2 sm:py-3 px-2 sm:px-4 min-h-[64px] sm:min-h-[80px]">
+      <div className="flex flex-wrap items-end justify-center gap-x-4 sm:gap-x-6 md:gap-x-7 gap-y-2 sm:gap-y-3 py-1 sm:py-2 px-2 sm:px-4 min-h-[56px] sm:min-h-[64px]">
         {targetWords.map((word, wordIndex) => {
           const prevWords = targetWords.slice(0, wordIndex)
           const wordStartIndex = prevWords.length > 0 ? prevWords.join(' ').length + 1 : 0
@@ -79,12 +85,12 @@ export function TypingInput({
           return (
             <div
               key={wordIndex}
-              className={`flex items-center gap-[6px] sm:gap-[9px] pb-1 border-b-[3px] sm:border-b-4 transition-all duration-150 ${
+              className={`flex items-center gap-[4px] sm:gap-[6px] pb-1 border-b-[3px] transition-all duration-150 ${
                 isWordActive
-                  ? 'border-indigo-600 bg-indigo-50/50 px-2 sm:px-2.5 rounded-t-lg shadow-2xs'
+                  ? 'border-indigo-600 bg-indigo-50/50 px-1.5 sm:px-2 rounded-t-lg shadow-2xs'
                   : isWordCompleted
-                  ? 'border-emerald-500 bg-emerald-50/25 px-2 sm:px-2.5 rounded-t-lg'
-                  : 'border-slate-300 px-2'
+                  ? 'border-emerald-500 bg-emerald-50/25 px-1.5 sm:px-2 rounded-t-lg'
+                  : 'border-slate-300 px-1.5'
               }`}
             >
               {word.split('').map((char, charIdx) => {
@@ -92,26 +98,33 @@ export function TypingInput({
                 const isCharTyped = charAbsoluteIndex < currentTyped.length
                 const typedChar = isCharTyped ? currentTyped[charAbsoluteIndex] : null
                 const isCharCurrent = charAbsoluteIndex === currentTyped.length
+                const isPunctuation = /[.,?!]/.test(char)
 
                 return (
                   <span
                     key={charIdx}
-                    className={`relative inline-flex items-center justify-center min-w-[22px] sm:min-w-[30px] md:min-w-[36px] h-12 sm:h-14 md:h-16 text-3xl sm:text-4xl md:text-5xl font-extrabold font-sans transition-all ${
+                    className={`relative inline-flex items-center justify-center ${
+                      isPunctuation ? 'min-w-[14px] sm:min-w-[18px] md:min-w-[22px]' : 'min-w-[18px] sm:min-w-[24px] md:min-w-[28px]'
+                    } h-10 sm:h-12 md:h-14 text-2xl sm:text-3xl md:text-4xl font-extrabold font-sans transition-all ${
                       isCharTyped
                         ? 'text-slate-900'
                         : isCharCurrent && isWordActive
-                        ? 'text-slate-400'
-                        : 'text-slate-300'
+                        ? isPunctuation ? 'text-indigo-600' : 'text-slate-400'
+                        : isPunctuation ? 'text-indigo-400/80' : 'text-slate-300'
                     }`}
                   >
                     {/* Blinking cursor */}
                     {isCharCurrent && !isCompleted && (
-                      <span className="absolute -top-1 bottom-1 w-[3px] sm:w-[3.5px] bg-indigo-600 rounded-full animate-cursor" />
+                      <span className="absolute -top-1 bottom-1 w-[2.5px] sm:w-[3px] bg-indigo-600 rounded-full animate-cursor" />
                     )}
 
-                    {/* Character or light underline dash */}
+                    {/* Character or ghost punctuation mark */}
                     {isCharTyped ? (
                       typedChar
+                    ) : isPunctuation ? (
+                      <span className={`font-black ${char === '?' ? 'text-amber-500 font-sans' : 'text-indigo-400'}`}>
+                        {char}
+                      </span>
                     ) : (
                       <span className="text-slate-300 font-normal">
                         _

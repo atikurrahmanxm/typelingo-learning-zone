@@ -128,7 +128,7 @@ export function App() {
   // Calculate current active word index
   const getCurrentWordIndex = () => {
     if (!targetSentence) return 0
-    const rawWords = targetSentence.trim().replace(/[.,?!]/g, '').split(/\s+/)
+    const rawWords = targetSentence.trim().split(/\s+/)
     let charCount = 0
     for (let i = 0; i < rawWords.length; i++) {
       const wordLen = rawWords[i].length
@@ -143,7 +143,7 @@ export function App() {
   // Calculate completed word indices
   const getCompletedWordIndices = () => {
     if (!targetSentence) return []
-    const rawWords = targetSentence.trim().replace(/[.,?!]/g, '').split(/\s+/)
+    const rawWords = targetSentence.trim().split(/\s+/)
     const completed = []
     let charCount = 0
     for (let i = 0; i < rawWords.length; i++) {
@@ -249,6 +249,17 @@ export function App() {
         setHasError(false)
         return
       }
+
+      // If user typed last word and presses Space when only ending punctuation remains (. or ?):
+      if (typed.length === targetSentence.length - 1 && /[.,?!]/.test(expectedChar)) {
+        playKeySound(isMuted)
+        setCorrectKeypresses((prev) => prev + 1)
+        const nextTyped = typed + expectedChar
+        setTyped(nextTyped)
+        setHasError(false)
+        handleCompleteSentence()
+        return
+      }
     }
 
     // Check match
@@ -263,12 +274,26 @@ export function App() {
         handleCompleteSentence()
       }
     } else {
+      // Helpful punctuation feedback if user swapped . and ?
+      if (expectedChar === '?' && char === '.') {
+        playErrorSound(isMuted)
+        setHasError(true)
+        setFeedbackMessage('This is a question! Type "?" (Shift + /)')
+        return
+      }
+      if (expectedChar === '.' && char === '?') {
+        playErrorSound(isMuted)
+        setHasError(true)
+        setFeedbackMessage('This is a statement! Type "."')
+        return
+      }
+
       // Mismatch
       playErrorSound(isMuted)
       setHasError(true)
       setCombo(0)
       setScore((prev) => Math.max(0, prev - 10))
-      setFeedbackMessage('Mismatch! Press Backspace to fix')
+      setFeedbackMessage(`Mismatch! Expected "${expectedChar}"`)
     }
   }
 
@@ -291,10 +316,15 @@ export function App() {
       const wordLen = rawWords[i].length
       if (typed.length < charCount + wordLen) {
         const remainingInWord = targetSentence.slice(typed.length, charCount + wordLen)
-        setTyped((prev) => prev + remainingInWord)
+        const nextTyped = typed + remainingInWord
+        setTyped(nextTyped)
         setScore((prev) => Math.max(0, prev - 25))
         setFeedbackMessage(`Hint applied: "${rawWords[i]}" (-25 XP)`)
         playWordSuccess(isMuted)
+
+        if (nextTyped.length === targetSentence.length) {
+          handleCompleteSentence()
+        }
         return
       }
       charCount += wordLen + 1
@@ -516,6 +546,7 @@ export function App() {
             <WordChips
               words={targetWords}
               bengaliMeaning={currentExercise ? currentExercise.bengaliMeaning : ''}
+              targetSentence={targetSentence}
               currentWordIndex={getCurrentWordIndex()}
               completedWordIndices={getCompletedWordIndices()}
               showWords={!isPreviewHidden}

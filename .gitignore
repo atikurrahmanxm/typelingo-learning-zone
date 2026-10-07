@@ -25,3 +25,4 @@ Thumbs.db
 # Scratch and reference media
 scratch/
 *.mp4
+public/audio/cache/

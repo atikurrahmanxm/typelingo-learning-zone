@@ -60,6 +60,7 @@ const getLayoutConfig = (count) => {
 export function WordChips({
   words = [],
   bengaliMeaning = '',
+  targetSentence = '',
   currentWordIndex = 0,
   completedWordIndices = [],
   showWords = true,
@@ -87,7 +88,15 @@ export function WordChips({
           {words.map((item, idx) => {
             const isCurrent = idx === currentWordIndex
             const isDone = completedWordIndices.includes(idx)
+            const isLastWord = idx === words.length - 1
             const styleConfig = ROLE_BADGE_STYLES[item.roleColor] || ROLE_BADGE_STYLES.blue
+
+            // Clear ending punctuation (. or ?) for the sentence
+            let punctuation = item.punctuation || ''
+            if (isLastWord && !punctuation && targetSentence) {
+              const match = targetSentence.trim().match(/([.?!]+)$/)
+              punctuation = match ? match[1] : '.'
+            }
 
             return (
               <div
@@ -114,7 +123,7 @@ export function WordChips({
                   </span>
                 </div>
 
-                {/* 2. English Word */}
+                {/* 2. English Word with Ending Punctuation */}
                 <div className="my-1.5 flex items-center gap-1 sm:gap-1.5">
                   <span
                     className={`font-extrabold tracking-tight transition-colors ${config.wordText} ${
@@ -125,7 +134,28 @@ export function WordChips({
                         : 'text-slate-800'
                     }`}
                   >
-                    {showWords || isDone ? item.word : '••••'}
+                    {showWords || isDone ? (
+                      <>
+                        <span>{item.word}</span>
+                        {punctuation && (
+                          <span
+                            className={`ml-0.5 font-black transition-colors ${
+                              punctuation === '?'
+                                ? 'text-amber-500 font-sans'
+                                : isCurrent
+                                ? 'text-indigo-600'
+                                : isDone
+                                ? 'text-emerald-600'
+                                : 'text-slate-500'
+                            }`}
+                          >
+                            {punctuation}
+                          </span>
+                        )}
+                      </>
+                    ) : (
+                      '••••'
+                    )}
                   </span>
                   {isDone && (
                     <Check className={`${config.checkIcon} text-emerald-600 stroke-[3]`} />

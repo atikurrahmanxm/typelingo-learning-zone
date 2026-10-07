@@ -835,6 +835,19 @@ export const COURSES = [
 import sentences3000Data from './sentences_3000.json'
 import wordDictionary from './wordDictionary.js'
 
+// Normalizes ending punctuation (. or ?) so every sentence is grammatically complete
+export function normalizeSentencePunctuation(sentence, bengali = '') {
+  if (!sentence) return ''
+  const trimmed = sentence.trim()
+  if (/[.?!]$/.test(trimmed)) return trimmed
+
+  const isQuestion =
+    /^(who|what|where|when|why|which|how|is|are|am|do|does|did|can|could|will|would|should|may|have|has)\b/i.test(trimmed) ||
+    (bengali && bengali.includes('?'))
+
+  return isQuestion ? `${trimmed}?` : `${trimmed}.`
+}
+
 // Auto-tagger with 100% complete Bengali meanings and grammar roles
 export function parseSentenceIntoWords(sentence) {
   if (!sentence) return []
@@ -844,6 +857,7 @@ export function parseSentenceIntoWords(sentence) {
   return rawWords.map((w, index) => {
     const cleanWord = w.replace(/[^\w'-]/g, '')
     const lower = cleanWord.toLowerCase()
+    const punctuation = w.match(/[.,?!]+$/)?.[0] || ''
 
     const dictEntry = wordDictionary[lower]
     let role = dictEntry?.role || (index === 0 ? 'Subject' : 'Object')
@@ -871,6 +885,7 @@ export function parseSentenceIntoWords(sentence) {
 
     return {
       word: cleanWord,
+      punctuation,
       role,
       roleColor,
       ipa: `/${lower}/`,
@@ -883,32 +898,39 @@ export function parseSentenceIntoWords(sentence) {
 // Flat list of original course exercises
 export const COURSE_EXERCISES = COURSES.flatMap((course) =>
   course.lessons.flatMap((lesson) =>
-    lesson.exercises.map((ex) => ({
-      ...ex,
-      courseId: course.id,
-      courseTitle: course.title,
-      lessonId: lesson.id,
-      lessonTitle: lesson.title,
-      category: course.badge || 'Daily Conversation',
-    }))
+    lesson.exercises.map((ex) => {
+      const normalizedSentence = normalizeSentencePunctuation(ex.sentence, ex.bengaliMeaning)
+      return {
+        ...ex,
+        sentence: normalizedSentence,
+        courseId: course.id,
+        courseTitle: course.title,
+        lessonId: lesson.id,
+        lessonTitle: lesson.title,
+        category: course.badge || 'Daily Conversation',
+      }
+    })
   )
 )
 
 // Master list of 3,000 Common Sentences with lazy word generation
-export const SENTENCES_3000 = sentences3000Data.map((s, idx) => ({
-  id: s.id || `s-${idx + 1}`,
-  sentence: s.sentence,
-  bengaliMeaning: s.bengaliMeaning,
-  category: s.category || 'Daily Phrases',
-  difficulty: s.difficulty || 'Easy',
-  audioUrl: null,
-  get words() {
-    if (!this._words) {
-      this._words = parseSentenceIntoWords(this.sentence)
-    }
-    return this._words
-  },
-}))
+export const SENTENCES_3000 = sentences3000Data.map((s, idx) => {
+  const normalizedSentence = normalizeSentencePunctuation(s.sentence, s.bengaliMeaning)
+  return {
+    id: s.id || `s-${idx + 1}`,
+    sentence: normalizedSentence,
+    bengaliMeaning: s.bengaliMeaning,
+    category: s.category || 'Daily Phrases',
+    difficulty: s.difficulty || 'Easy',
+    audioUrl: null,
+    get words() {
+      if (!this._words) {
+        this._words = parseSentenceIntoWords(this.sentence)
+      }
+      return this._words
+    },
+  }
+})
 
 // Master pool of concise, high-impact practice exercises (3,000 sentences)
 export const ALL_EXERCISES = SENTENCES_3000
