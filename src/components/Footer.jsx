@@ -9,6 +9,14 @@ function GithubIcon({ className = 'w-4 h-4' }) {
   )
 }
 
+function LinkedinIcon({ className = 'w-3.5 h-3.5' }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="currentColor">
+      <path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.46 10.9v8.37H9.2V10.9H6.46M7.83 6.2a1.64 1.64 0 0 0-1.64 1.64c0 .91.73 1.64 1.64 1.64s1.64-.73 1.64-1.64c0-.91-.73-1.64-1.64-1.64z" />
+    </svg>
+  )
+}
+
 export function Footer({
   completedTotal = 0,
   totalSentences = 3000,
@@ -41,28 +49,32 @@ export function Footer({
           )}
         </div>
 
-        {/* Center / Right: Developer Credit by Atikur Rahman */}
-        <div className="flex items-center gap-2.5">
+        {/* Center / Right: Developer Credit by Atikur Rahman & GitHub */}
+        <div className="flex items-center gap-3">
           <div className="flex items-center gap-1.5 text-xs text-slate-600">
-            <span>Developed with</span>
-            <Heart className="w-3.5 h-3.5 text-rose-500 fill-rose-500" />
-            <span>by</span>
-            <button
-              onClick={onOpenAboutCreator}
-              className="font-bold text-indigo-600 hover:text-indigo-800 transition-colors"
+            <span>Developed by</span>
+            <a
+              href="https://www.linkedin.com/in/atikurrahmanxm"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-bold text-indigo-600 hover:text-indigo-800 hover:underline transition-colors"
+              title="LinkedIn: Atikur Rahman (atikurrahmanxm)"
             >
               Atikur Rahman
-            </button>
+            </a>
           </div>
+
+          <span className="text-slate-300">·</span>
 
           <a
             href="https://github.com/atikurrahmanxm"
             target="_blank"
             rel="noopener noreferrer"
-            className="p-1 text-slate-400 hover:text-slate-700 rounded-md transition-colors"
+            className="inline-flex items-center gap-1.5 text-xs text-slate-500 hover:text-slate-900 transition-colors p-1 rounded-md"
             title="GitHub: atikurrahmanxm"
           >
             <GithubIcon className="w-3.5 h-3.5" />
+            <span className="font-semibold text-[11px] sm:text-xs">GitHub</span>
           </a>
         </div>
       </div>

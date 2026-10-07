@@ -9,6 +9,14 @@ function GithubIcon({ className = 'w-4 h-4' }) {
   )
 }
 
+function LinkedinIcon({ className = 'w-4 h-4' }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="currentColor">
+      <path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.46 10.9v8.37H9.2V10.9H6.46M7.83 6.2a1.64 1.64 0 0 0-1.64 1.64c0 .91.73 1.64 1.64 1.64s1.64-.73 1.64-1.64c0-.91-.73-1.64-1.64-1.64z" />
+    </svg>
+  )
+}
+
 export function AboutCreatorModal({ isOpen, onClose }) {
   if (!isOpen) return null
 
@@ -39,7 +47,16 @@ export function AboutCreatorModal({ isOpen, onClose }) {
             ইংরেজি শোনা, শুদ্ধ উচ্চারণ ও সুপারফাস্ট টাইপিং প্র্যাকটিসকে আনন্দদায়ক ও ফলপ্রসূ করতে এই প্ল্যাটফর্মটি ডেভেলপ করা হয়েছে।
           </p>
 
-          <div className="flex items-center gap-2 mt-3.5">
+          <div className="flex flex-wrap items-center justify-center gap-2 mt-3.5">
+            <a
+              href="https://www.linkedin.com/in/atikurrahmanxm"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 px-4 py-2 bg-[#0A66C2] hover:bg-[#004182] text-white text-xs font-bold rounded-xl transition-all shadow-sm hover:scale-102"
+            >
+              <LinkedinIcon className="w-4 h-4" />
+              <span>LinkedIn Profile</span>
+            </a>
             <a
               href="https://github.com/atikurrahmanxm"
               target="_blank"
@@ -47,7 +64,7 @@ export function AboutCreatorModal({ isOpen, onClose }) {
               className="inline-flex items-center gap-2 px-4 py-2 bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold rounded-xl transition-all shadow-sm hover:scale-102"
             >
               <GithubIcon className="w-4 h-4" />
-              <span>@atikurrahmanxm on GitHub</span>
+              <span>GitHub</span>
             </a>
           </div>
         </div>
@@ -96,9 +113,15 @@ export function AboutCreatorModal({ isOpen, onClose }) {
         {/* Footer Note */}
         <div className="pt-3 border-t border-slate-100 flex items-center justify-between text-xs text-slate-400">
           <div className="flex items-center gap-1.5">
-            <span>Made with</span>
-            <Heart className="w-3.5 h-3.5 text-rose-500 fill-rose-500" />
-            <span>by Atikur Rahman</span>
+            <span>Developed by</span>
+            <a
+              href="https://www.linkedin.com/in/atikurrahmanxm"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-bold text-indigo-600 hover:text-indigo-800 hover:underline transition-colors"
+            >
+              Atikur Rahman
+            </a>
           </div>
           <button
             onClick={onClose}
