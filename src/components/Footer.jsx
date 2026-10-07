@@ -19,8 +19,8 @@ export function Footer({
   const percentCompleted = totalSentences > 0 ? ((completedTotal / totalSentences) * 100).toFixed(0) : 0
 
   return (
-    <footer className="w-full bg-white border-t border-slate-200/70 py-3.5 px-3 sm:px-6 lg:px-8 select-none">
-      <div className="w-full flex flex-col sm:flex-row items-center justify-between gap-2.5 text-xs text-slate-500">
+    <footer className="w-full bg-white border-t border-slate-200/70 py-3.5 px-3 sm:px-6 select-none">
+      <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2.5 text-xs text-slate-500">
         {/* Left: Minimal Progress */}
         <div className="flex items-center gap-2.5">
           <span className="font-semibold text-slate-700">

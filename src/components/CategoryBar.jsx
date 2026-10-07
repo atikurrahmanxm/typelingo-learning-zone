@@ -10,8 +10,8 @@ export function CategoryBar({
   isSpeedTestActive = false,
 }) {
   return (
-    <div className="w-full bg-slate-50/70 border-b border-slate-200/60 select-none py-1.5 px-3 sm:px-6 lg:px-8">
-      <div className="w-full flex items-center justify-between gap-2 sm:gap-4">
+    <div className="w-full bg-slate-50/70 border-b border-slate-200/60 select-none py-1.5 px-3 sm:px-6">
+      <div className="max-w-6xl mx-auto flex items-center justify-between gap-2 sm:gap-3">
         {/* Left: Category pills with horizontal scroll */}
         <div className="flex items-center gap-1.5 sm:gap-2 overflow-x-auto no-scrollbar scroll-smooth py-0.5 flex-1 min-w-0">
           {CATEGORIES_SUMMARY.map((cat) => {
@@ -40,20 +40,22 @@ export function CategoryBar({
           })}
         </div>
 
-        {/* Right side: Score Test Button (Requested by User) */}
+        {/* Right side: Single Distinct Score Test Button with clean divider */}
         {onOpenSpeedTest && (
-          <button
-            onClick={onOpenSpeedTest}
-            className={`flex items-center gap-1.5 px-3.5 py-1 rounded-xl text-xs font-bold whitespace-nowrap transition-all shrink-0 border shadow-2xs ${
-              isSpeedTestActive
-                ? 'bg-amber-500 text-white border-amber-600 shadow-xs ring-2 ring-amber-400/30'
-                : 'bg-amber-50 text-amber-800 border-amber-300 hover:bg-amber-100 hover:text-amber-900'
-            }`}
-            title="Typing Speed & Score Test"
-          >
-            <Zap className={`w-3.5 h-3.5 ${isSpeedTestActive ? 'text-white' : 'text-amber-500 fill-amber-500 animate-pulse'}`} />
-            <span>Score Test</span>
-          </button>
+          <div className="flex items-center shrink-0 border-l border-slate-200/90 pl-2 sm:pl-3">
+            <button
+              onClick={onOpenSpeedTest}
+              className={`flex items-center gap-1.5 px-3.5 py-1 rounded-xl text-xs font-bold whitespace-nowrap transition-all shrink-0 border shadow-2xs ${
+                isSpeedTestActive
+                  ? 'bg-amber-500 text-white border-amber-600 shadow-xs ring-2 ring-amber-400/30'
+                  : 'bg-amber-50 text-amber-800 border-amber-300 hover:bg-amber-100 hover:text-amber-900'
+              }`}
+              title="Typing Speed & Score Test"
+            >
+              <Zap className={`w-3.5 h-3.5 ${isSpeedTestActive ? 'text-white' : 'text-amber-500 fill-amber-500 animate-pulse'}`} />
+              <span>Score Test</span>
+            </button>
+          </div>
         )}
       </div>
     </div>

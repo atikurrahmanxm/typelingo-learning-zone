@@ -37,7 +37,7 @@ export function Header({
 
   return (
     <header className="w-full bg-white border-b border-slate-200/80 sticky top-0 z-30 select-none">
-      <div className="w-full px-3 sm:px-6 lg:px-8 h-14 flex items-center justify-between gap-2 sm:gap-4">
+      <div className="max-w-6xl mx-auto px-3 sm:px-6 h-14 flex items-center justify-between gap-2 sm:gap-4">
         {/* Left: Brand + Category / Progress Counter */}
         <div className="flex items-center gap-2.5 sm:gap-3">
           <button
@@ -67,31 +67,34 @@ export function Header({
           </span>
         </div>
 
-        {/* Center: Live Performance (WPM, Accuracy, Streak) */}
-        <div className="flex items-center gap-2.5 sm:gap-4 font-mono text-xs sm:text-sm">
+        {/* Center: Unified Performance Capsule */}
+        <div className="flex items-center bg-slate-50 border border-slate-200/90 rounded-full px-3.5 py-1 text-xs font-mono text-slate-700 shadow-2xs gap-2.5">
           {/* WPM */}
           <div
-            className="flex items-center gap-1 text-indigo-700 bg-indigo-50/80 px-2.5 py-1 rounded-lg font-bold"
+            className="flex items-center gap-1 font-bold text-indigo-700"
             title="Words Per Minute"
           >
             <Zap className="w-3.5 h-3.5 text-indigo-600" />
-            <span>
-              {wpm} <span className="text-[10px] uppercase font-sans font-medium text-indigo-500">wpm</span>
-            </span>
+            <span>{wpm}</span>
+            <span className="text-[10px] uppercase font-sans font-medium text-indigo-500">wpm</span>
           </div>
+
+          <span className="w-px h-3.5 bg-slate-200" />
 
           {/* Accuracy */}
           <div
-            className="flex items-center gap-1 text-emerald-700 bg-emerald-50/80 px-2.5 py-1 rounded-lg font-bold"
+            className="flex items-center gap-1 font-bold text-emerald-700"
             title="Accuracy"
           >
             <Target className="w-3.5 h-3.5 text-emerald-600" />
             <span>{accuracy}%</span>
           </div>
 
+          <span className="w-px h-3.5 bg-slate-200 hidden sm:inline-block" />
+
           {/* Streak */}
           <div
-            className="hidden sm:flex items-center gap-1 text-amber-700 bg-amber-50 px-2 py-1 rounded-lg font-bold text-xs"
+            className="hidden sm:flex items-center gap-1 font-bold text-amber-700"
             title={`${streak} দিনের স্ট্রিক`}
           >
             <Flame className="w-3.5 h-3.5 text-amber-500 fill-amber-500" />
@@ -99,73 +102,60 @@ export function Header({
           </div>
         </div>
 
-        {/* Right: Quick Action Controls */}
-        <div className="flex items-center gap-1 sm:gap-1.5">
-          {/* Restart Button */}
-          <button
-            onClick={onRestartCurrentLesson}
-            className="p-1.5 text-slate-400 hover:text-slate-700 hover:bg-slate-100 rounded-lg transition-colors"
-            title="পুনরায় শুরু করুন (Restart)"
-          >
-            <RotateCcw className="w-4 h-4" />
-          </button>
+        {/* Right: Clean Grouped Utility Toolbar */}
+        <div className="flex items-center gap-1.5 sm:gap-2">
+          {/* Icon Toolbar Box */}
+          <div className="flex items-center bg-slate-100/80 border border-slate-200/80 rounded-xl p-0.5 gap-0.5">
+            {/* Sound Mute/Unmute */}
+            <button
+              onClick={onToggleMute}
+              className={`p-1.5 rounded-lg transition-colors ${
+                isMuted
+                  ? 'text-rose-500 hover:bg-rose-50'
+                  : 'text-slate-500 hover:text-indigo-600 hover:bg-white'
+              }`}
+              title={isMuted ? 'শব্দ চালু করুন (Unmute)' : 'শব্দ বন্ধ করুন (Mute)'}
+            >
+              {isMuted ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
+            </button>
 
-          {/* Shuffle / Next Random Sentence */}
-          <button
-            onClick={onShuffleAgain}
-            className="p-1.5 text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors"
-            title="নতুন বাক্য এলোমেলো করুন (Shuffle)"
-          >
-            <Shuffle className="w-4 h-4" />
-          </button>
+            {/* Shuffle / Next Random Sentence */}
+            <button
+              onClick={onShuffleAgain}
+              className="p-1.5 text-slate-500 hover:text-indigo-600 hover:bg-white rounded-lg transition-colors"
+              title="নতুন বাক্য এলোমেলো করুন (Shuffle)"
+            >
+              <Shuffle className="w-4 h-4" />
+            </button>
 
-          {/* Sound Mute/Unmute */}
-          <button
-            onClick={onToggleMute}
-            className={`p-1.5 rounded-lg transition-colors ${
-              isMuted
-                ? 'text-rose-500 hover:bg-rose-50'
-                : 'text-slate-400 hover:text-indigo-600 hover:bg-slate-100'
-            }`}
-            title={isMuted ? 'শব্দ চালু করুন (Unmute)' : 'শব্দ বন্ধ করুন (Mute)'}
-          >
-            {isMuted ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
-          </button>
+            {/* Restart Lesson */}
+            <button
+              onClick={onRestartCurrentLesson}
+              className="p-1.5 text-slate-500 hover:text-slate-700 hover:bg-white rounded-lg transition-colors"
+              title="পুনরায় শুরু করুন (Restart)"
+            >
+              <RotateCcw className="w-4 h-4" />
+            </button>
 
-          {/* All Topics Drawer */}
-          <button
-            onClick={onOpenLessonMenu}
-            className="p-1.5 text-slate-400 hover:text-slate-700 hover:bg-slate-100 rounded-lg transition-colors"
-            title="সব টপিক ও লেসন (Browse Lessons)"
-          >
-            <SlidersHorizontal className="w-4 h-4" />
-          </button>
+            {/* All Topics Drawer */}
+            <button
+              onClick={onOpenLessonMenu}
+              className="p-1.5 text-slate-500 hover:text-slate-700 hover:bg-white rounded-lg transition-colors"
+              title="সব টপিক ও লেসন (Browse Lessons)"
+            >
+              <SlidersHorizontal className="w-4 h-4" />
+            </button>
+          </div>
 
           {/* Dev Attribution */}
           <button
             onClick={onOpenAboutCreator}
-            className="hidden lg:flex items-center gap-1 text-xs font-semibold text-slate-500 hover:text-indigo-600 hover:bg-slate-100 px-2 py-1 rounded-lg transition-colors ml-1"
+            className="hidden sm:flex items-center gap-1 text-xs font-semibold text-slate-500 hover:text-indigo-600 bg-slate-100/70 hover:bg-slate-200/80 px-2.5 py-1.5 rounded-xl transition-colors border border-slate-200/60"
             title="Developer: Atikur Rahman"
           >
             <UserCheck className="w-3.5 h-3.5 text-indigo-600" />
             <span className="text-[11px]">Atikur</span>
           </button>
-
-          {/* Score Test Button */}
-          {onOpenSpeedTest && (
-            <button
-              onClick={onOpenSpeedTest}
-              className={`flex items-center gap-1 text-xs font-bold px-2.5 py-1 rounded-lg border transition-all ml-1 shrink-0 ${
-                practiceMode === 'speedtest'
-                  ? 'bg-amber-500 text-white border-amber-600 shadow-2xs'
-                  : 'bg-amber-50 text-amber-800 border-amber-200/90 hover:bg-amber-100 hover:text-amber-900'
-              }`}
-              title="Typing Speed & Score Test"
-            >
-              <Zap className={`w-3.5 h-3.5 ${practiceMode === 'speedtest' ? 'text-white' : 'text-amber-500 fill-amber-500'}`} />
-              <span className="hidden sm:inline">Score Test</span>
-            </button>
-          )}
         </div>
       </div>
 
