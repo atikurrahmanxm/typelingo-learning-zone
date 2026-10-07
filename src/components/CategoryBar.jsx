@@ -10,10 +10,10 @@ export function CategoryBar({
   isSpeedTestActive = false,
 }) {
   return (
-    <div className="w-full bg-slate-50/70 border-b border-slate-200/60 select-none py-1.5 px-3 sm:px-6">
-      <div className="max-w-6xl mx-auto flex items-center justify-between gap-2">
+    <div className="w-full bg-slate-50/70 border-b border-slate-200/60 select-none py-1.5 px-3 sm:px-6 lg:px-8">
+      <div className="w-full flex items-center justify-between gap-2 sm:gap-4">
         {/* Left: Category pills with horizontal scroll */}
-        <div className="flex items-center gap-1.5 sm:gap-2 overflow-x-auto no-scrollbar scroll-smooth py-0.5">
+        <div className="flex items-center gap-1.5 sm:gap-2 overflow-x-auto no-scrollbar scroll-smooth py-0.5 flex-1 min-w-0">
           {CATEGORIES_SUMMARY.map((cat) => {
             const isSelected = !isSpeedTestActive && selectedCategory === cat.id
             const isDaily = cat.id === 'daily-challenge'

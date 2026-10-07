@@ -37,7 +37,7 @@ export function Header({
 
   return (
     <header className="w-full bg-white border-b border-slate-200/80 sticky top-0 z-30 select-none">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between gap-3">
+      <div className="w-full px-3 sm:px-6 lg:px-8 h-14 flex items-center justify-between gap-2 sm:gap-4">
         {/* Left: Brand + Category / Progress Counter */}
         <div className="flex items-center gap-2.5 sm:gap-3">
           <button
@@ -155,7 +155,7 @@ export function Header({
           {onOpenSpeedTest && (
             <button
               onClick={onOpenSpeedTest}
-              className={`flex items-center gap-1 text-xs font-bold px-2.5 py-1 rounded-lg border transition-all ml-1 ${
+              className={`flex items-center gap-1 text-xs font-bold px-2.5 py-1 rounded-lg border transition-all ml-1 shrink-0 ${
                 practiceMode === 'speedtest'
                   ? 'bg-amber-500 text-white border-amber-600 shadow-2xs'
                   : 'bg-amber-50 text-amber-800 border-amber-200/90 hover:bg-amber-100 hover:text-amber-900'
