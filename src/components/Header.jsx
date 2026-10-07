@@ -30,6 +30,7 @@ export function Header({
   onOpenCustomModal,
   onShuffleAgain,
   onOpenAboutCreator,
+  onOpenSpeedTest,
 }) {
   const progressPercent =
     totalExercises > 0 ? ((currentIndex + 1) / totalExercises) * 100 : 0
@@ -149,6 +150,22 @@ export function Header({
             <UserCheck className="w-3.5 h-3.5 text-indigo-600" />
             <span className="text-[11px]">Atikur</span>
           </button>
+
+          {/* Score Test Button */}
+          {onOpenSpeedTest && (
+            <button
+              onClick={onOpenSpeedTest}
+              className={`flex items-center gap-1 text-xs font-bold px-2.5 py-1 rounded-lg border transition-all ml-1 ${
+                practiceMode === 'speedtest'
+                  ? 'bg-amber-500 text-white border-amber-600 shadow-2xs'
+                  : 'bg-amber-50 text-amber-800 border-amber-200/90 hover:bg-amber-100 hover:text-amber-900'
+              }`}
+              title="Typing Speed & Score Test"
+            >
+              <Zap className={`w-3.5 h-3.5 ${practiceMode === 'speedtest' ? 'text-white' : 'text-amber-500 fill-amber-500'}`} />
+              <span className="hidden sm:inline">Score Test</span>
+            </button>
+          )}
         </div>
       </div>
 

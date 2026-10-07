@@ -28,6 +28,7 @@ import { LessonCompleteModal } from './components/LessonCompleteModal'
 import { LessonSelectorModal } from './components/LessonSelectorModal'
 import { CustomTextModal } from './components/CustomTextModal'
 import { AboutCreatorModal } from './components/AboutCreatorModal'
+import { SpeedTestView } from './components/SpeedTestView'
 
 export function App() {
   // Practice Mode: 'auto' (smart randomized non-stop flow across all 3,000+ sentences) | 'lesson'
@@ -108,6 +109,8 @@ export function App() {
 
   // Auto-speak on exercise load (guarantees crystal-clear voice on every transition)
   useEffect(() => {
+    if (practiceMode === 'speedtest') return
+
     setTyped('')
     setIsCompleted(false)
     setFeedbackMessage('')
@@ -120,7 +123,7 @@ export function App() {
       clearTimeout(timeout)
       stopSentenceVoice()
     }
-  }, [currentExercise?.id, handlePlayVoice])
+  }, [currentExercise?.id, handlePlayVoice, practiceMode])
 
   // Calculate current active word index
   const getCurrentWordIndex = () => {
@@ -301,6 +304,8 @@ export function App() {
   // Keyboard Shortcuts (Tab to replay, Ctrl+Space for hint, Ctrl+H to toggle preview)
   useEffect(() => {
     const handleGlobalKey = (e) => {
+      if (practiceMode === 'speedtest') return
+
       // Tab to replay voice
       if (e.key === 'Tab') {
         e.preventDefault()
@@ -319,7 +324,7 @@ export function App() {
     }
     window.addEventListener('keydown', handleGlobalKey)
     return () => window.removeEventListener('keydown', handleGlobalKey)
-  }, [handlePlayVoice])
+  }, [handlePlayVoice, practiceMode])
 
   // Select Category from Bar or Modal
   const handleSelectCategory = (categoryId) => {
@@ -439,14 +444,22 @@ export function App() {
         courseTitle={
           practiceMode === 'auto'
             ? currentExercise.category || 'TypeLingo Zone'
+            : practiceMode === 'speedtest'
+            ? 'Score & Speed Test'
             : currentCourse.title
         }
         lessonTitle={
           practiceMode === 'auto'
             ? currentExercise.category || '3,000+ Sentences'
+            : practiceMode === 'speedtest'
+            ? 'Speed Challenge'
             : currentLesson.title
         }
-        category={currentExercise.category || 'Daily Conversation'}
+        category={
+          practiceMode === 'speedtest'
+            ? 'Speed Test'
+            : currentExercise.category || 'Daily Conversation'
+        }
         currentIndex={practiceMode === 'auto' ? queueIndex : lessonExerciseIndex}
         totalExercises={
           practiceMode === 'auto' ? queue.length : currentLesson.exercises.length
@@ -467,14 +480,24 @@ export function App() {
         onShuffleAgain={handleShuffleAgain}
         onSwitchToAutoMode={handleSwitchToAutoMode}
         onOpenAboutCreator={() => setIsAboutCreatorOpen(true)}
+        onOpenSpeedTest={() =>
+          setPracticeMode(practiceMode === 'speedtest' ? 'auto' : 'speedtest')
+        }
       />
 
-      {/* Category Pills Bar (Visible in continuous practice mode) */}
-      {practiceMode === 'auto' && (
+      {/* Category Pills Bar (Always accessible, with Score Test button highlighted on the right) */}
+      {(practiceMode === 'auto' || practiceMode === 'speedtest') && (
         <CategoryBar
           selectedCategory={selectedCategory}
-          onSelectCategory={handleSelectCategory}
+          onSelectCategory={(catId) => {
+            setPracticeMode('auto')
+            handleSelectCategory(catId)
+          }}
           todayCompletedCount={streakData.todayCount || 0}
+          onOpenSpeedTest={() =>
+            setPracticeMode(practiceMode === 'speedtest' ? 'auto' : 'speedtest')
+          }
+          isSpeedTestActive={practiceMode === 'speedtest'}
         />
       )}
 
@@ -482,43 +505,50 @@ export function App() {
         Main Practice Container - Auto-Centered with zero scrollbars:
       */}
       <main className="flex-1 w-full max-w-6xl mx-auto px-3 sm:px-6 md:px-8 py-3 sm:py-6 flex flex-col items-center justify-center">
-        <div className="w-full bg-white rounded-3xl p-5 sm:p-8 md:p-10 lg:p-12 border border-slate-200/90 shadow-md flex flex-col items-center justify-between min-h-[580px] sm:min-h-[640px]">
-          {/* Word Cards Box with Dynamic Responsive Layout and Large Bengali Translation */}
-          <WordChips
-            words={targetWords}
-            bengaliMeaning={currentExercise ? currentExercise.bengaliMeaning : ''}
-            currentWordIndex={getCurrentWordIndex()}
-            completedWordIndices={getCompletedWordIndices()}
-            showWords={!isPreviewHidden}
+        {practiceMode === 'speedtest' ? (
+          <SpeedTestView
+            onBackToPractice={() => setPracticeMode('auto')}
+            isMuted={isMuted}
           />
+        ) : (
+          <div className="w-full bg-white rounded-3xl p-5 sm:p-8 md:p-10 lg:p-12 border border-slate-200/90 shadow-md flex flex-col items-center justify-between min-h-[580px] sm:min-h-[640px]">
+            {/* Word Cards Box with Dynamic Responsive Layout and Large Bengali Translation */}
+            <WordChips
+              words={targetWords}
+              bengaliMeaning={currentExercise ? currentExercise.bengaliMeaning : ''}
+              currentWordIndex={getCurrentWordIndex()}
+              completedWordIndices={getCompletedWordIndices()}
+              showWords={!isPreviewHidden}
+            />
 
-          {/* Audio Equalizer Waveform & Prompt */}
-          <PromptAudio
-            isSpeaking={isSpeaking}
-            onReplay={handlePlayVoice}
-            feedbackMessage={feedbackMessage}
-          />
+            {/* Audio Equalizer Waveform & Prompt */}
+            <PromptAudio
+              isSpeaking={isSpeaking}
+              onReplay={handlePlayVoice}
+              feedbackMessage={feedbackMessage}
+            />
 
-          {/* Typing Area with Big Letters & Clearly Separated Word Slots */}
-          <TypingInput
-            targetSentence={targetSentence}
-            currentTyped={typed}
-            onCharacterInput={handleCharacterInput}
-            onBackspace={handleBackspace}
-            hasError={hasError}
-            isCompleted={isCompleted}
-          />
+            {/* Typing Area with Big Letters & Clearly Separated Word Slots */}
+            <TypingInput
+              targetSentence={targetSentence}
+              currentTyped={typed}
+              onCharacterInput={handleCharacterInput}
+              onBackspace={handleBackspace}
+              hasError={hasError}
+              isCompleted={isCompleted}
+            />
 
-          {/* Bottom Shortcut Toolbar with Mascot and Next/Prev buttons */}
-          <ShortcutBar
-            onReplay={handlePlayVoice}
-            onHint={handleHintWord}
-            onToggleHidePreview={() => setIsPreviewHidden(!isPreviewHidden)}
-            isPreviewHidden={isPreviewHidden}
-            onPrevious={handlePreviousExercise}
-            onNext={handleNextExercise}
-          />
-        </div>
+            {/* Bottom Shortcut Toolbar with Mascot and Next/Prev buttons */}
+            <ShortcutBar
+              onReplay={handlePlayVoice}
+              onHint={handleHintWord}
+              onToggleHidePreview={() => setIsPreviewHidden(!isPreviewHidden)}
+              isPreviewHidden={isPreviewHidden}
+              onPrevious={handlePreviousExercise}
+              onNext={handleNextExercise}
+            />
+          </div>
+        )}
       </main>
 
       {/* Modern Footer with Developer Attribution to Atikur Rahman */}
