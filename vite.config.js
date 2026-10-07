@@ -28,7 +28,7 @@ export default defineConfig({
               fs.mkdirSync(cacheDir, { recursive: true })
             }
 
-            const hash = crypto.createHash('md5').update(`${text}_${rate}`).digest('hex')
+            const hash = crypto.createHash('md5').update(`v3_soft_ava_${text}_${rate}`).digest('hex')
             const targetFile = path.join(cacheDir, `${hash}.mp3`)
 
             if (fs.existsSync(targetFile)) {
@@ -38,14 +38,16 @@ export default defineConfig({
               return
             }
 
-            // Generate on the fly using python -m edge_tts
-            const rateFlag = rate === 'slow' ? '-25%' : '+0%'
+            // Generate on the fly using python -m edge_tts with soft, soothing, articulate voice
+            const rateFlag = rate === 'slow' ? '-22%' : '-4%'
             const child = spawn('python', [
               '-m', 'edge_tts',
-              '-v', 'en-US-JennyNeural',
+              '-v', 'en-US-AvaNeural',
               '-t', text,
-              '--rate', rateFlag,
-              '--write-media', targetFile
+              `--rate=${rateFlag}`,
+              `--pitch=-2Hz`,
+              `--volume=-5%`,
+              `--write-media=${targetFile}`
             ])
 
             child.on('close', (code) => {

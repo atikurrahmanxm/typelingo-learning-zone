@@ -41,7 +41,7 @@ export function playSentenceVoice(audioUrl, sentenceText, isSlow = false, onStar
   if (resolvedSrc) {
     const audio = new Audio(resolvedSrc)
     currentAudioInstance = audio
-    audio.volume = 1.0
+    audio.volume = 0.85 // Comfortable, warm volume (not loud or piercing)
     audio.preload = 'auto'
 
     if (isSlow) {
@@ -72,7 +72,7 @@ export function playSentenceVoice(audioUrl, sentenceText, isSlow = false, onStar
   }
 }
 
-// Fallback browser speech synthesis with highest quality voice available
+// Fallback browser speech synthesis with ultra-soft, natural human tone
 function fallbackBrowserSpeech(text, isSlow, onStart, onEnd) {
   if (!('speechSynthesis' in window)) {
     if (onEnd) onEnd()
@@ -81,23 +81,31 @@ function fallbackBrowserSpeech(text, isSlow, onStart, onEnd) {
 
   window.speechSynthesis.cancel()
   const utterance = new SpeechSynthesisUtterance(text)
-  utterance.rate = isSlow ? 0.75 : 1.0
+  // Calm, gentle conversational pacing and warm pitch
+  utterance.rate = isSlow ? 0.72 : 0.92
+  utterance.pitch = 0.96
+  utterance.volume = 0.82
   utterance.lang = 'en-US'
 
   const voices = window.speechSynthesis.getVoices()
-  const naturalVoice = voices.find(
+  // Prioritize modern, soft neural and natural voices
+  const naturalSoftVoice = voices.find(
     (v) =>
       v.lang.startsWith('en') &&
-      (v.name.includes('Natural') ||
-        v.name.includes('Online') ||
+      (v.name.includes('Ava') ||
         v.name.includes('Jenny') ||
+        v.name.includes('Natural') ||
+        v.name.includes('Neural') ||
+        v.name.includes('Online') ||
         v.name.includes('Aria') ||
-        v.name.includes('Google') ||
-        v.name.includes('Samantha'))
-  ) || voices.find((v) => v.lang.startsWith('en'))
+        v.name.includes('Google US English') ||
+        v.name.includes('Samantha') ||
+        v.name.includes('Victoria'))
+  ) || voices.find((v) => v.lang.startsWith('en') && !v.name.toLowerCase().includes('desktop'))
+    || voices.find((v) => v.lang.startsWith('en'))
 
-  if (naturalVoice) {
-    utterance.voice = naturalVoice
+  if (naturalSoftVoice) {
+    utterance.voice = naturalSoftVoice
   }
 
   if (onStart) utterance.onstart = onStart
@@ -121,7 +129,7 @@ export function stopSentenceVoice() {
   }
 }
 
-// 2. Tactile key click sound
+// 2. Soft, tactile key click sound
 export function playKeySound(isMuted = false) {
   if (isMuted) return
   const ctx = getAudioContext()
@@ -132,11 +140,12 @@ export function playKeySound(isMuted = false) {
     const gain = ctx.createGain()
 
     osc.type = 'triangle'
-    const freq = 340 + Math.random() * 60
+    const freq = 320 + Math.random() * 50
     osc.frequency.setValueAtTime(freq, ctx.currentTime)
     osc.frequency.exponentialRampToValueAtTime(110, ctx.currentTime + 0.035)
 
-    gain.gain.setValueAtTime(0.07, ctx.currentTime)
+    // Soft mechanical click
+    gain.gain.setValueAtTime(0.045, ctx.currentTime)
     gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.035)
 
     osc.connect(gain)
@@ -149,7 +158,7 @@ export function playKeySound(isMuted = false) {
   }
 }
 
-// 3. Error buzz
+// 3. Gentle error tap (gentle sine bump instead of harsh sawtooth buzz)
 export function playErrorSound(isMuted = false) {
   if (isMuted) return
   const ctx = getAudioContext()
@@ -159,18 +168,19 @@ export function playErrorSound(isMuted = false) {
     const osc = ctx.createOscillator()
     const gain = ctx.createGain()
 
-    osc.type = 'sawtooth'
-    osc.frequency.setValueAtTime(150, ctx.currentTime)
-    osc.frequency.linearRampToValueAtTime(100, ctx.currentTime + 0.12)
+    // Soft sine wave instead of harsh buzz
+    osc.type = 'sine'
+    osc.frequency.setValueAtTime(180, ctx.currentTime)
+    osc.frequency.exponentialRampToValueAtTime(110, ctx.currentTime + 0.09)
 
-    gain.gain.setValueAtTime(0.08, ctx.currentTime)
-    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.12)
+    gain.gain.setValueAtTime(0.035, ctx.currentTime)
+    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.09)
 
     osc.connect(gain)
     gain.connect(ctx.destination)
 
     osc.start()
-    osc.stop(ctx.currentTime + 0.12)
+    osc.stop(ctx.currentTime + 0.09)
   } catch (e) {
     // ignore
   }
