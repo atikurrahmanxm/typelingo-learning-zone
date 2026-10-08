@@ -24,7 +24,7 @@ import {
   markParagraphSeen,
 } from '../utils/speedTestQueue'
 
-// Comprehensive pool of 350+ frequent, natural, high-yield English words
+// Comprehensive pool of 200+ frequent, natural, high-yield English words
 const SPEED_WORDS_POOL = [
   'the', 'be', 'to', 'of', 'and', 'a', 'in', 'that', 'have', 'i', 'it', 'for', 'not',
   'on', 'with', 'he', 'as', 'you', 'do', 'at', 'this', 'but', 'his', 'by', 'from',
@@ -48,6 +48,11 @@ const SPEED_WORDS_POOL = [
   'wonder', 'change', 'grow', 'stand', 'watch', 'share', 'teach', 'reach', 'guide',
   'practice', 'success', 'listen', 'number', 'system', 'program', 'typing', 'speed',
   'keyboard', 'letter', 'sentence', 'lesson', 'memory', 'moment', 'minute', 'second',
+  'animal', 'nature', 'ocean', 'island', 'valley', 'bridge', 'castle', 'market',
+  'stream', 'garden', 'window', 'mirror', 'vision', 'signal', 'symbol', 'circle',
+  'spirit', 'courage', 'honesty', 'kindness', 'passion', 'purpose', 'balance', 'silence',
+  'effort', 'yellow', 'purple', 'silver', 'golden', 'modern', 'little', 'center',
+  'space', 'planet', 'rocket', 'galaxy', 'energy', 'bright', 'screen', 'sound',
 ]
 
 function getSpeedRank(wpm) {
@@ -60,10 +65,10 @@ function getSpeedRank(wpm) {
 }
 
 export function SpeedTestView({ onBackToPractice, isMuted = false }) {
-  // Test configuration: 'paragraphs' | 'sentences' | 'words'
+  // Test configuration: 'words' (default) | 'paragraphs' | 'sentences'
   const [duration, setDuration] = useState(60) // 15, 30, 60, 120
   const [testMode, setTestMode] = useState(() => {
-    return localStorage.getItem('typelingo_speed_test_mode') || 'paragraphs'
+    return localStorage.getItem('typelingo_speed_test_mode') || 'words'
   })
 
   // Test state: 'idle' | 'running' | 'finished'
@@ -394,9 +399,9 @@ export function SpeedTestView({ onBackToPractice, isMuted = false }) {
           {/* Mode Pills */}
           <div className="flex items-center gap-0.5">
             {[
+              { id: 'words', label: 'Words' },
               { id: 'paragraphs', label: 'Paragraphs (130+)' },
               { id: 'sentences', label: 'Sentences' },
-              { id: 'words', label: 'Words' },
             ].map((m) => (
               <button
                 key={m.id}
@@ -470,10 +475,24 @@ export function SpeedTestView({ onBackToPractice, isMuted = false }) {
                     </button>
                   )}
                 </>
+              ) : testMode === 'words' ? (
+                <div className="flex items-center gap-2">
+                  <span className="px-2.5 py-1 rounded-xl bg-slate-100 text-slate-700 font-bold border border-slate-200/80 shrink-0">
+                    Words Mode
+                  </span>
+                  <span className="text-xs text-slate-400 font-medium hidden sm:inline">
+                    Top High-Yield Vocabulary
+                  </span>
+                </div>
               ) : (
-                <span className="font-bold text-slate-600 text-sm capitalize">
-                  {testMode} Mode
-                </span>
+                <div className="flex items-center gap-2">
+                  <span className="px-2.5 py-1 rounded-xl bg-slate-100 text-slate-700 font-bold border border-slate-200/80 shrink-0">
+                    Sentences Mode
+                  </span>
+                  <span className="text-xs text-slate-400 font-medium hidden sm:inline">
+                    Chained English Practice
+                  </span>
+                </div>
               )}
             </div>
 
@@ -514,7 +533,7 @@ export function SpeedTestView({ onBackToPractice, isMuted = false }) {
           >
             {(testMode === 'paragraphs'
               ? words
-              : words.slice(Math.max(0, currentWordIndex - 3), currentWordIndex + 25)
+              : words.slice(Math.max(0, currentWordIndex - 3), currentWordIndex + 35)
             ).map((word, relIdx) => {
               const absIdx = testMode === 'paragraphs' ? relIdx : Math.max(0, currentWordIndex - 3) + relIdx
               const isCurrent = absIdx === currentWordIndex
