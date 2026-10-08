@@ -12,9 +12,17 @@ import {
   Clock,
   ArrowRight,
   TrendingUp,
+  BookOpen,
+  Shuffle,
 } from 'lucide-react'
 import confetti from 'canvas-confetti'
 import { playKeySound, playErrorSound, playCelebrationSound } from '../utils/sound'
+import { SPEED_PARAGRAPHS } from '../data/speedTestParagraphs'
+import {
+  generateTestContent,
+  getNextParagraph,
+  markParagraphSeen,
+} from '../utils/speedTestQueue'
 
 // Comprehensive pool of 350+ frequent, natural, high-yield English words
 const SPEED_WORDS_POOL = [
@@ -42,43 +50,6 @@ const SPEED_WORDS_POOL = [
   'keyboard', 'letter', 'sentence', 'lesson', 'memory', 'moment', 'minute', 'second',
 ]
 
-// Natural sentences pool for sentence mode
-const SPEED_SENTENCES_POOL = [
-  'Practice makes a person perfect in every way.',
-  'Success comes to those who work hard every day.',
-  'We should always speak the truth with kindness.',
-  'Continuous learning leads to great personal growth.',
-  'A healthy mind lives inside a healthy body.',
-  'Time is the most valuable treasure in human life.',
-  'Believe in your dreams and never give up hope.',
-  'English is a global bridge connecting all people.',
-  'Focus on progress rather than seeking perfection.',
-  'Small daily efforts lead to remarkable achievements.',
-  'Early to bed and early to rise brings good health.',
-  'Patience and persistence can overcome any obstacle.',
-]
-
-function generateWordList(count = 120, mode = 'words') {
-  if (mode === 'sentences') {
-    const list = []
-    while (list.length < count) {
-      const sentence = SPEED_SENTENCES_POOL[Math.floor(Math.random() * SPEED_SENTENCES_POOL.length)]
-      const words = sentence.split(' ')
-      for (const w of words) {
-        list.push(w)
-      }
-    }
-    return list.slice(0, count)
-  }
-
-  const result = []
-  for (let i = 0; i < count; i++) {
-    const word = SPEED_WORDS_POOL[Math.floor(Math.random() * SPEED_WORDS_POOL.length)]
-    result.push(word)
-  }
-  return result
-}
-
 function getSpeedRank(wpm) {
   if (wpm >= 100) return { title: 'Godspeed Master', badge: '👑', color: 'from-amber-500 to-yellow-400', desc: 'Top 1% elite typing velocity!' }
   if (wpm >= 80) return { title: 'Pro Speed Typer', badge: '🚀', color: 'from-violet-600 to-indigo-600', desc: 'Outstanding speed and fluid muscle memory!' }
@@ -89,14 +60,20 @@ function getSpeedRank(wpm) {
 }
 
 export function SpeedTestView({ onBackToPractice, isMuted = false }) {
-  // Test configuration
+  // Test configuration: 'paragraphs' | 'sentences' | 'words'
   const [duration, setDuration] = useState(60) // 15, 30, 60, 120
-  const [testMode, setTestMode] = useState('words') // 'words' | 'sentences'
+  const [testMode, setTestMode] = useState(() => {
+    return localStorage.getItem('typelingo_speed_test_mode') || 'paragraphs'
+  })
 
   // Test state: 'idle' | 'running' | 'finished'
   const [testStatus, setTestStatus] = useState('idle')
   const [timeLeft, setTimeLeft] = useState(60)
-  const [words, setWords] = useState(() => generateWordList(150, 'words'))
+
+  // Non-repeating content tracking
+  const [usedParagraphs, setUsedParagraphs] = useState([])
+  const [activeParagraph, setActiveParagraph] = useState(null)
+  const [words, setWords] = useState([])
 
   // Typing tracking
   const [currentWordIndex, setCurrentWordIndex] = useState(0)
@@ -138,7 +115,7 @@ export function SpeedTestView({ onBackToPractice, isMuted = false }) {
     focusInput()
   }, [testStatus])
 
-  // Reset test cleanly
+  // Reset test cleanly with fresh content
   const handleResetTest = useCallback((newDuration = duration, newMode = testMode) => {
     if (timerRef.current) clearInterval(timerRef.current)
     setTestStatus('idle')
@@ -150,9 +127,35 @@ export function SpeedTestView({ onBackToPractice, isMuted = false }) {
     setIncorrectKeystrokes(0)
     setTotalKeystrokes(0)
     setIsNewRecord(false)
-    setWords(generateWordList(150, newMode))
+
+    // Generate fresh non-repeating content
+    const content = generateTestContent(newMode, 150, SPEED_WORDS_POOL)
+    setWords(content.words)
+    setUsedParagraphs(content.paragraphs)
+    setActiveParagraph(content.primaryParagraph)
+
     setTimeout(focusInput, 50)
   }, [duration, testMode])
+
+  // Initialize content on first mount
+  useEffect(() => {
+    handleResetTest(duration, testMode)
+  }, [])
+
+  // Skip to another unseen paragraph in idle state
+  const handleSkipParagraph = () => {
+    if (testStatus !== 'idle') return
+    const activeIds = usedParagraphs.map((p) => p.id)
+    const nextPara = getNextParagraph(activeIds)
+    const paraWords = nextPara.text.trim().split(/\s+/)
+    setWords(paraWords)
+    setUsedParagraphs([nextPara])
+    setActiveParagraph(nextPara)
+    setCurrentWordIndex(0)
+    setCurrentInput('')
+    setWordHistory([])
+    focusInput()
+  }
 
   // Handle countdown timer
   useEffect(() => {
@@ -195,6 +198,11 @@ export function SpeedTestView({ onBackToPractice, isMuted = false }) {
       const elapsedMinutes = duration / 60
       const finalWpm = Math.max(0, Math.round((correctKeystrokes / 5) / elapsedMinutes))
       const finalAccuracy = totalKeystrokes > 0 ? Math.round((correctKeystrokes / totalKeystrokes) * 100) : 100
+
+      // Mark used paragraphs as seen so they won't repeat
+      if (testMode === 'paragraphs' && usedParagraphs.length > 0) {
+        usedParagraphs.forEach((p) => markParagraphSeen(p.id))
+      }
 
       // Check personal best
       if (finalWpm > bestWpm) {
@@ -251,9 +259,21 @@ export function SpeedTestView({ onBackToPractice, isMuted = false }) {
       setCurrentWordIndex((prev) => prev + 1)
       setCurrentInput('')
 
-      // Auto-append more words if nearing end of list
+      // Auto-append more non-repeating words if nearing end of list
       if (currentWordIndex >= words.length - 20) {
-        setWords((prev) => [...prev, ...generateWordList(50, testMode)])
+        if (testMode === 'paragraphs') {
+          const activeIds = usedParagraphs.map((p) => p.id)
+          const nextPara = getNextParagraph(activeIds)
+          setUsedParagraphs((prev) => [...prev, nextPara])
+          const newWords = nextPara.text.trim().split(/\s+/)
+          setWords((prev) => [...prev, ...newWords])
+        } else if (testMode === 'sentences') {
+          const moreContent = generateTestContent('sentences', 50, SPEED_WORDS_POOL)
+          setWords((prev) => [...prev, ...moreContent.words])
+        } else {
+          const moreContent = generateTestContent('words', 50, SPEED_WORDS_POOL)
+          setWords((prev) => [...prev, ...moreContent.words])
+        }
       }
       return
     }
@@ -334,16 +354,20 @@ export function SpeedTestView({ onBackToPractice, isMuted = false }) {
           ))}
         </div>
 
-        {/* Mode Selector: Words vs Sentences */}
+        {/* Mode Selector: Paragraphs vs Sentences vs Words */}
         <div className="flex items-center gap-1 bg-white p-1 rounded-2xl border border-slate-200/80 shadow-2xs">
           {[
-            { id: 'words', label: 'Words' },
+            { id: 'paragraphs', label: 'Paragraphs' },
             { id: 'sentences', label: 'Sentences' },
+            { id: 'words', label: 'Words' },
           ].map((m) => (
             <button
               key={m.id}
               onClick={() => {
                 setTestMode(m.id)
+                try {
+                  localStorage.setItem('typelingo_speed_test_mode', m.id)
+                } catch (e) {}
                 handleResetTest(duration, m.id)
               }}
               className={`px-3 py-1 rounded-xl text-xs font-bold transition-all ${
@@ -364,7 +388,7 @@ export function SpeedTestView({ onBackToPractice, isMuted = false }) {
       {testStatus !== 'finished' ? (
         <div className="w-full bg-white rounded-3xl p-6 sm:p-10 border border-slate-200/80 shadow-md flex flex-col justify-between min-h-[460px] relative">
           {/* Top Live Stats HUD */}
-          <div className="w-full flex items-center justify-between pb-4 border-b border-slate-100 mb-6">
+          <div className="w-full flex items-center justify-between pb-4 border-b border-slate-100 mb-4 sm:mb-6">
             {/* Countdown Timer with clean glowing ring */}
             <div className="flex items-center gap-2">
               <div className="p-2 rounded-xl bg-indigo-50 text-indigo-600 font-extrabold">
@@ -397,6 +421,35 @@ export function SpeedTestView({ onBackToPractice, isMuted = false }) {
               </div>
             </div>
           </div>
+
+          {/* Paragraph / Topic Banner for Paragraphs mode */}
+          {testMode === 'paragraphs' && activeParagraph && (
+            <div className="w-full flex items-center justify-between gap-2 pb-3 mb-2 border-b border-slate-100 text-xs">
+              <div className="flex items-center gap-2 min-w-0">
+                <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-lg bg-indigo-50 text-indigo-700 font-bold border border-indigo-200/70 shrink-0">
+                  <BookOpen className="w-3.5 h-3.5" />
+                  <span>{activeParagraph.category}</span>
+                </span>
+                <span className="font-bold text-slate-800 truncate">
+                  {activeParagraph.title}
+                </span>
+                <span className="text-[11px] text-slate-400 font-mono hidden sm:inline">
+                  (Passage #{activeParagraph.id.replace('para-', '')} of {SPEED_PARAGRAPHS.length})
+                </span>
+              </div>
+
+              {testStatus === 'idle' && (
+                <button
+                  onClick={handleSkipParagraph}
+                  className="flex items-center gap-1 text-[11px] font-bold text-slate-500 hover:text-indigo-600 bg-slate-50 hover:bg-slate-100 px-2.5 py-1 rounded-lg border border-slate-200/70 transition-all shrink-0 cursor-pointer"
+                  title="Next Passage (skip to another unseen passage)"
+                >
+                  <Shuffle className="w-3 h-3 text-slate-400" />
+                  <span>Next Passage</span>
+                </button>
+              )}
+            </div>
+          )}
 
           {/* 
             Interactive Typing Box (Inspired by Monkeytype / 10FastFingers)

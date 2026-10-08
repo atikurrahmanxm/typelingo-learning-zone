@@ -26,3 +26,5 @@ Thumbs.db
 scratch/
 *.mp4
 public/audio/cache/
+__pycache__/
+*.pyc
