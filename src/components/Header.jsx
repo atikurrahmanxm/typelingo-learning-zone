@@ -52,19 +52,28 @@ export function Header({
 
           <span className="h-3.5 w-px bg-slate-200 hidden sm:inline-block" />
 
-          {/* Current Topic Badge (Clickable to switch) */}
-          <button
-            onClick={onOpenLessonMenu}
-            className="flex items-center gap-1.5 text-xs font-semibold text-slate-700 hover:text-indigo-600 bg-slate-100 hover:bg-slate-200/70 px-2.5 py-1 rounded-lg transition-colors max-w-[130px] sm:max-w-[200px] truncate"
-            title="টপিক বা ক্যাটাগরি পরিবর্তন করুন"
-          >
-            <span className="truncate">{category || courseTitle || lessonTitle}</span>
-          </button>
+          {practiceMode === 'speedtest' ? (
+            <span className="flex items-center gap-1.5 text-xs font-bold text-indigo-700 bg-indigo-50 border border-indigo-200/80 px-2.5 py-1 rounded-lg">
+              <Zap className="w-3.5 h-3.5 text-indigo-600 fill-indigo-600" />
+              <span>Speed Test (130+ Passages)</span>
+            </span>
+          ) : (
+            <>
+              {/* Current Topic Badge (Clickable to switch) */}
+              <button
+                onClick={onOpenLessonMenu}
+                className="flex items-center gap-1.5 text-xs font-semibold text-slate-700 hover:text-indigo-600 bg-slate-100 hover:bg-slate-200/70 px-2.5 py-1 rounded-lg transition-colors max-w-[130px] sm:max-w-[200px] truncate"
+                title="টপিক বা ক্যাটাগরি পরিবর্তন করুন"
+              >
+                <span className="truncate">{category || courseTitle || lessonTitle}</span>
+              </button>
 
-          {/* Minimal Exercise Counter */}
-          <span className="text-xs font-semibold text-slate-400 whitespace-nowrap">
-            {currentIndex + 1} / {totalExercises}
-          </span>
+              {/* Minimal Exercise Counter */}
+              <span className="text-xs font-semibold text-slate-400 whitespace-nowrap">
+                {currentIndex + 1} / {totalExercises}
+              </span>
+            </>
+          )}
         </div>
 
         {/* Center: Unified Performance Capsule */}

@@ -255,26 +255,59 @@ export function SpeedTestView({ onBackToPractice, isMuted = false }) {
         { word: targetWord, typed: typedWord, isCorrect: isWordMatch },
       ])
 
+      // If finished current paragraph in paragraph mode, seamlessly load next non-repeating paragraph
+      if (testMode === 'paragraphs' && currentWordIndex >= words.length - 1) {
+        if (activeParagraph?.id) {
+          markParagraphSeen(activeParagraph.id)
+        }
+        const activeIds = usedParagraphs.map((p) => p.id)
+        const nextPara = getNextParagraph(activeIds)
+        setUsedParagraphs((prev) => [...prev, nextPara])
+        setActiveParagraph(nextPara)
+        const nextWords = nextPara.text.trim().split(/\s+/)
+        setWords(nextWords)
+        setCurrentWordIndex(0)
+        setCurrentInput('')
+        return
+      }
+
       // Advance to next word
       setCurrentWordIndex((prev) => prev + 1)
       setCurrentInput('')
 
-      // Auto-append more non-repeating words if nearing end of list
-      if (currentWordIndex >= words.length - 20) {
-        if (testMode === 'paragraphs') {
-          const activeIds = usedParagraphs.map((p) => p.id)
-          const nextPara = getNextParagraph(activeIds)
-          setUsedParagraphs((prev) => [...prev, nextPara])
-          const newWords = nextPara.text.trim().split(/\s+/)
-          setWords((prev) => [...prev, ...newWords])
-        } else if (testMode === 'sentences') {
+      // Auto-append more non-repeating words if nearing end of list (for sentences/words mode)
+      if (currentWordIndex >= words.length - 15) {
+        if (testMode === 'sentences') {
           const moreContent = generateTestContent('sentences', 50, SPEED_WORDS_POOL)
           setWords((prev) => [...prev, ...moreContent.words])
-        } else {
+        } else if (testMode === 'words') {
           const moreContent = generateTestContent('words', 50, SPEED_WORDS_POOL)
           setWords((prev) => [...prev, ...moreContent.words])
         }
       }
+      return
+    }
+
+    // Auto-advance if last character of last word matches in paragraph mode
+    if (testMode === 'paragraphs' && currentWordIndex === words.length - 1 && val === targetWord) {
+      playKeySound(isMuted)
+      setTotalKeystrokes((prev) => prev + 1)
+      setCorrectKeystrokes((prev) => prev + 1)
+      setWordHistory((prev) => [
+        ...prev,
+        { word: targetWord, typed: val, isCorrect: true },
+      ])
+      if (activeParagraph?.id) {
+        markParagraphSeen(activeParagraph.id)
+      }
+      const activeIds = usedParagraphs.map((p) => p.id)
+      const nextPara = getNextParagraph(activeIds)
+      setUsedParagraphs((prev) => [...prev, nextPara])
+      setActiveParagraph(nextPara)
+      const nextWords = nextPara.text.trim().split(/\s+/)
+      setWords(nextWords)
+      setCurrentWordIndex(0)
+      setCurrentInput('')
       return
     }
 
@@ -319,168 +352,194 @@ export function SpeedTestView({ onBackToPractice, isMuted = false }) {
   return (
     <div
       onClick={focusInput}
-      className="w-full max-w-5xl mx-auto px-3 sm:px-6 py-4 flex flex-col items-center select-none"
+      className="w-full max-w-5xl mx-auto px-3 sm:px-4 py-1 sm:py-2 flex flex-col items-center select-none"
     >
       {/* 
-        Top Controls Bar: Back button, Duration pills, Mode switch
+        Single Unified Controls Header: Back | Duration & Mode Segment | Quick Restart
       */}
-      <div className="w-full flex flex-wrap items-center justify-between gap-3 mb-4 sm:mb-6">
-        {/* Back to practice button */}
+      <div className="w-full flex items-center justify-between gap-3 mb-3.5">
+        {/* Back Button */}
         <button
           onClick={onBackToPractice}
-          className="flex items-center gap-1.5 text-xs font-bold text-slate-600 hover:text-indigo-600 bg-white hover:bg-slate-50 px-3 py-1.5 rounded-xl border border-slate-200/80 shadow-2xs transition-all"
+          className="flex items-center gap-1.5 text-xs font-bold text-slate-600 hover:text-indigo-600 bg-white hover:bg-slate-50 px-3 py-1.5 rounded-xl border border-slate-200/80 shadow-2xs transition-all cursor-pointer"
         >
-          <ChevronLeft className="w-4 h-4" />
+          <ChevronLeft className="w-4 h-4 text-slate-400" />
           <span>Back to Practice</span>
         </button>
 
-        {/* Duration Selector (15s, 30s, 60s, 120s) */}
-        <div className="flex items-center gap-1 bg-white p-1 rounded-2xl border border-slate-200/80 shadow-2xs">
-          {[15, 30, 60, 120].map((sec) => (
-            <button
-              key={sec}
-              onClick={() => {
-                setDuration(sec)
-                handleResetTest(sec, testMode)
-              }}
-              className={`px-3 py-1 rounded-xl text-xs font-extrabold transition-all ${
-                duration === sec
-                  ? 'bg-indigo-600 text-white shadow-xs'
-                  : 'text-slate-500 hover:text-slate-900 hover:bg-slate-50'
-              }`}
-            >
-              {sec}s
-            </button>
-          ))}
+        {/* Unified Segmented Toolbar: Duration | Mode */}
+        <div className="flex items-center gap-1.5 bg-white p-1 rounded-2xl border border-slate-200/80 shadow-2xs text-xs font-bold">
+          {/* Duration Pills */}
+          <div className="flex items-center gap-0.5">
+            {[15, 30, 60, 120].map((sec) => (
+              <button
+                key={sec}
+                onClick={() => {
+                  setDuration(sec)
+                  handleResetTest(sec, testMode)
+                }}
+                className={`px-3 py-1 rounded-xl transition-all cursor-pointer ${
+                  duration === sec
+                    ? 'bg-indigo-600 text-white shadow-2xs font-extrabold'
+                    : 'text-slate-500 hover:text-slate-900 hover:bg-slate-50'
+                }`}
+              >
+                {sec}s
+              </button>
+            ))}
+          </div>
+
+          <span className="w-px h-4 bg-slate-200 mx-1" />
+
+          {/* Mode Pills */}
+          <div className="flex items-center gap-0.5">
+            {[
+              { id: 'paragraphs', label: 'Paragraphs (130+)' },
+              { id: 'sentences', label: 'Sentences' },
+              { id: 'words', label: 'Words' },
+            ].map((m) => (
+              <button
+                key={m.id}
+                onClick={() => {
+                  setTestMode(m.id)
+                  try {
+                    localStorage.setItem('typelingo_speed_test_mode', m.id)
+                  } catch (e) {}
+                  handleResetTest(duration, m.id)
+                }}
+                className={`px-3 py-1 rounded-xl transition-all cursor-pointer ${
+                  testMode === m.id
+                    ? 'bg-slate-800 text-white shadow-2xs font-extrabold'
+                    : 'text-slate-500 hover:text-slate-900 hover:bg-slate-50'
+                }`}
+              >
+                {m.label}
+              </button>
+            ))}
+          </div>
         </div>
 
-        {/* Mode Selector: Paragraphs vs Sentences vs Words */}
-        <div className="flex items-center gap-1 bg-white p-1 rounded-2xl border border-slate-200/80 shadow-2xs">
-          {[
-            { id: 'paragraphs', label: 'Paragraphs' },
-            { id: 'sentences', label: 'Sentences' },
-            { id: 'words', label: 'Words' },
-          ].map((m) => (
-            <button
-              key={m.id}
-              onClick={() => {
-                setTestMode(m.id)
-                try {
-                  localStorage.setItem('typelingo_speed_test_mode', m.id)
-                } catch (e) {}
-                handleResetTest(duration, m.id)
-              }}
-              className={`px-3 py-1 rounded-xl text-xs font-bold transition-all ${
-                testMode === m.id
-                  ? 'bg-slate-800 text-white shadow-xs'
-                  : 'text-slate-500 hover:text-slate-900 hover:bg-slate-50'
-              }`}
-            >
-              {m.label}
-            </button>
-          ))}
-        </div>
+        {/* Quick Restart */}
+        <button
+          onClick={() => handleResetTest(duration, testMode)}
+          className="flex items-center gap-1.5 text-xs font-bold text-slate-600 hover:text-indigo-600 bg-white hover:bg-slate-50 px-3 py-1.5 rounded-xl border border-slate-200/80 shadow-2xs transition-all cursor-pointer"
+          title="Restart Test (Tab)"
+        >
+          <RotateCcw className="w-3.5 h-3.5 text-slate-400" />
+          <span>Restart</span>
+          <kbd className="hidden sm:inline-block px-1.5 py-0.5 text-[10px] font-mono font-medium text-slate-400 bg-slate-100 rounded border border-slate-200">
+            Tab
+          </kbd>
+        </button>
       </div>
 
       {/* 
         MAIN CONTENT: TYPING CARD OR RESULT CARD
       */}
       {testStatus !== 'finished' ? (
-        <div className="w-full bg-white rounded-3xl p-6 sm:p-10 border border-slate-200/80 shadow-md flex flex-col justify-between min-h-[460px] relative">
-          {/* Top Live Stats HUD */}
-          <div className="w-full flex items-center justify-between pb-4 border-b border-slate-100 mb-4 sm:mb-6">
-            {/* Countdown Timer with clean glowing ring */}
-            <div className="flex items-center gap-2">
-              <div className="p-2 rounded-xl bg-indigo-50 text-indigo-600 font-extrabold">
-                <Timer className="w-5 h-5 animate-pulse" />
-              </div>
-              <div>
-                <span className="text-3xl sm:text-4xl font-extrabold font-mono tracking-tight text-indigo-600">
-                  {timeLeft}
+        <div
+          className={`w-full bg-white rounded-3xl p-5 sm:p-7 border transition-all duration-300 flex flex-col justify-between min-h-[380px] sm:min-h-[410px] relative shadow-xs ${
+            testStatus === 'running'
+              ? 'border-indigo-300 ring-2 ring-indigo-500/10'
+              : 'border-slate-200/80'
+          }`}
+        >
+          {/* Subtle Top Metadata & Live HUD Row */}
+          <div className="w-full flex items-center justify-between pb-4 border-b border-slate-100 text-xs">
+            {/* Left: Passage Meta or Mode */}
+            <div className="flex items-center gap-2.5 min-w-0">
+              {testMode === 'paragraphs' && activeParagraph ? (
+                <>
+                  <span className="px-2.5 py-1 rounded-xl bg-indigo-50 text-indigo-700 font-bold border border-indigo-100 shrink-0">
+                    {activeParagraph.category}
+                  </span>
+                  <span className="font-extrabold text-slate-800 text-sm truncate">
+                    {activeParagraph.title}
+                  </span>
+                  <span className="text-xs text-slate-400 font-mono hidden sm:inline">
+                    (#{activeParagraph.id.replace('para-', '')} / {SPEED_PARAGRAPHS.length})
+                  </span>
+                  {testStatus === 'idle' && (
+                    <button
+                      onClick={handleSkipParagraph}
+                      className="flex items-center gap-1 text-xs font-bold text-indigo-600 hover:text-indigo-800 bg-indigo-50/70 hover:bg-indigo-100/70 px-2.5 py-1 rounded-xl ml-1 transition-colors cursor-pointer"
+                      title="Next Passage (পরের প্যারাগ্রাফ)"
+                    >
+                      <Shuffle className="w-3 h-3" />
+                      <span>Next Passage</span>
+                    </button>
+                  )}
+                </>
+              ) : (
+                <span className="font-bold text-slate-600 text-sm capitalize">
+                  {testMode} Mode
                 </span>
-                <span className="text-xs text-slate-400 font-semibold ml-1">sec</span>
-              </div>
+              )}
             </div>
 
-            {/* Live Real-time WPM & Accuracy */}
-            <div className="flex items-center gap-3 sm:gap-6 font-mono">
-              <div className="flex items-center gap-1.5 bg-slate-50 px-3 py-1.5 rounded-xl border border-slate-200/60">
-                <Zap className="w-4 h-4 text-indigo-600" />
-                <span className="text-lg sm:text-xl font-bold text-slate-900">
-                  {liveWpm}
+            {/* Right: Live Timer, WPM & Accuracy in Clean Minimal Typography */}
+            <div className="flex items-center gap-4 font-mono">
+              <div className="flex items-baseline gap-1">
+                <span
+                  className={`text-3xl font-black ${
+                    timeLeft <= 5
+                      ? 'text-rose-600 animate-pulse'
+                      : timeLeft <= 10
+                      ? 'text-amber-500'
+                      : testStatus === 'running'
+                      ? 'text-indigo-600'
+                      : 'text-slate-700'
+                  }`}
+                >
+                  {timeLeft}
                 </span>
-                <span className="text-[10px] uppercase font-sans text-slate-400 font-bold">WPM</span>
+                <span className="text-xs text-slate-400 font-bold">s</span>
               </div>
 
-              <div className="flex items-center gap-1.5 bg-slate-50 px-3 py-1.5 rounded-xl border border-slate-200/60">
-                <Target className="w-4 h-4 text-emerald-600" />
-                <span className="text-lg sm:text-xl font-bold text-slate-900">
-                  {liveAccuracy}%
-                </span>
-                <span className="text-[10px] uppercase font-sans text-slate-400 font-bold">ACC</span>
+              <div className="flex items-center gap-2 text-xs font-bold text-slate-600 bg-slate-50 px-3 py-1.5 rounded-xl border border-slate-100">
+                <span>{liveWpm} <span className="text-[10px] text-slate-400 font-normal">wpm</span></span>
+                <span className="text-slate-300">•</span>
+                <span>{liveAccuracy}% <span className="text-[10px] text-slate-400 font-normal">acc</span></span>
               </div>
             </div>
           </div>
 
-          {/* Paragraph / Topic Banner for Paragraphs mode */}
-          {testMode === 'paragraphs' && activeParagraph && (
-            <div className="w-full flex items-center justify-between gap-2 pb-3 mb-2 border-b border-slate-100 text-xs">
-              <div className="flex items-center gap-2 min-w-0">
-                <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-lg bg-indigo-50 text-indigo-700 font-bold border border-indigo-200/70 shrink-0">
-                  <BookOpen className="w-3.5 h-3.5" />
-                  <span>{activeParagraph.category}</span>
-                </span>
-                <span className="font-bold text-slate-800 truncate">
-                  {activeParagraph.title}
-                </span>
-                <span className="text-[11px] text-slate-400 font-mono hidden sm:inline">
-                  (Passage #{activeParagraph.id.replace('para-', '')} of {SPEED_PARAGRAPHS.length})
-                </span>
-              </div>
-
-              {testStatus === 'idle' && (
-                <button
-                  onClick={handleSkipParagraph}
-                  className="flex items-center gap-1 text-[11px] font-bold text-slate-500 hover:text-indigo-600 bg-slate-50 hover:bg-slate-100 px-2.5 py-1 rounded-lg border border-slate-200/70 transition-all shrink-0 cursor-pointer"
-                  title="Next Passage (skip to another unseen passage)"
-                >
-                  <Shuffle className="w-3 h-3 text-slate-400" />
-                  <span>Next Passage</span>
-                </button>
-              )}
-            </div>
-          )}
-
           {/* 
-            Interactive Typing Box (Inspired by Monkeytype / 10FastFingers)
-            Auto-scrolling 3-line word display with real-time character coloring
+            Interactive Typing Box
+            Spacious, crisp, beautifully spaced text without half-cut letters or jumping lines
           */}
           <div
             ref={wordsContainerRef}
-            className="w-full flex-1 flex flex-wrap content-start gap-x-3 sm:gap-x-4 gap-y-2.5 sm:gap-y-3.5 text-2xl sm:text-3xl md:text-[34px] font-mono leading-relaxed max-h-[220px] overflow-hidden relative cursor-text select-none py-2"
+            className="w-full flex-1 flex flex-wrap content-start gap-x-3 sm:gap-x-3.5 md:gap-x-4 gap-y-2.5 sm:gap-y-3 text-xl sm:text-2xl md:text-[25px] font-mono leading-[1.75] min-h-[200px] relative cursor-text select-none py-3.5 sm:py-4.5"
           >
-            {words.slice(Math.max(0, currentWordIndex - 5), currentWordIndex + 25).map((word, relIdx) => {
-              const absIdx = Math.max(0, currentWordIndex - 5) + relIdx
+            {(testMode === 'paragraphs'
+              ? words
+              : words.slice(Math.max(0, currentWordIndex - 3), currentWordIndex + 25)
+            ).map((word, relIdx) => {
+              const absIdx = testMode === 'paragraphs' ? relIdx : Math.max(0, currentWordIndex - 3) + relIdx
               const isCurrent = absIdx === currentWordIndex
               const pastWord = wordHistory[absIdx]
 
-              // 1. Current Active Word (with character-by-character coloring & caret)
+              // 1. Current Active Word
               if (isCurrent) {
                 return (
                   <span
                     key={absIdx}
-                    className="relative inline-flex items-center bg-indigo-50/70 text-slate-900 px-2 py-0.5 rounded-xl border border-indigo-300/80 shadow-2xs font-extrabold"
+                    className="relative inline-flex items-center text-slate-900 font-bold bg-indigo-50/80 rounded-lg px-2 -mx-2 ring-1 ring-indigo-300 shadow-2xs"
                   >
                     {word.split('').map((char, cIdx) => {
                       const typedChar = currentInput[cIdx]
                       let charClass = 'text-slate-400' // untyped
                       if (typedChar !== undefined) {
-                        charClass = typedChar === char ? 'text-indigo-950' : 'text-rose-600 bg-rose-100 rounded-xs'
+                        charClass =
+                          typedChar === char
+                            ? 'text-indigo-950 font-bold'
+                            : 'text-rose-600 bg-rose-100/90 rounded-xs'
                       }
 
                       return (
                         <span key={cIdx} className={`relative ${charClass}`}>
-                          {/* Blinking Caret */}
+                          {/* Blinking Smooth Caret */}
                           {cIdx === currentInput.length && (
                             <span className="absolute -top-1 -bottom-1 left-0 w-[2.5px] bg-indigo-600 rounded-full animate-cursor" />
                           )}
@@ -494,7 +553,7 @@ export function SpeedTestView({ onBackToPractice, isMuted = false }) {
                       <span className="relative">
                         <span className="absolute -top-1 -bottom-1 left-0 w-[2.5px] bg-indigo-600 rounded-full animate-cursor" />
                         {currentInput.slice(word.length).split('').map((extraChar, eIdx) => (
-                          <span key={eIdx} className="text-rose-500 bg-rose-100 rounded-xs">
+                          <span key={eIdx} className="text-rose-600 bg-rose-100/90 rounded-xs">
                             {extraChar}
                           </span>
                         ))}
@@ -509,10 +568,10 @@ export function SpeedTestView({ onBackToPractice, isMuted = false }) {
                 return (
                   <span
                     key={absIdx}
-                    className={`inline-block transition-colors ${
+                    className={`inline-block transition-colors font-medium ${
                       pastWord.isCorrect
-                        ? 'text-emerald-700/80'
-                        : 'text-rose-600 line-through decoration-rose-400'
+                        ? 'text-slate-400/50'
+                        : 'text-rose-500 line-through decoration-rose-300'
                     }`}
                   >
                     {word}
@@ -522,7 +581,7 @@ export function SpeedTestView({ onBackToPractice, isMuted = false }) {
 
               // 3. Upcoming Words
               return (
-                <span key={absIdx} className="text-slate-400/90 font-medium transition-colors">
+                <span key={absIdx} className="text-slate-400 font-medium transition-colors">
                   {word}
                 </span>
               )
@@ -544,22 +603,19 @@ export function SpeedTestView({ onBackToPractice, isMuted = false }) {
             className="absolute opacity-0 pointer-events-none w-0 h-0"
           />
 
-          {/* Bottom Bar: Helper info & Restart button */}
-          <div className="w-full pt-4 mt-6 border-t border-slate-100 flex items-center justify-between text-xs text-slate-400">
-            <span className="hidden sm:inline">
+          {/* Bottom Clean Hint Bar */}
+          <div className="w-full pt-4 border-t border-slate-100 flex items-center justify-between text-xs text-slate-400">
+            <span>
               {testStatus === 'idle'
-                ? 'Type any letter to start the countdown automatically...'
-                : 'Press Space to advance to the next word.'}
+                ? 'টাইপ করা শুরু করলেই টাইমার চালু হবে • Space: পরের শব্দ'
+                : 'Space: পরের শব্দ • Tab: রিস্টার্ট • Esc: টেস্ট থামান'}
             </span>
 
-            <button
-              onClick={() => handleResetTest(duration, testMode)}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-slate-200 hover:bg-slate-50 text-slate-600 hover:text-slate-900 transition-colors font-medium ml-auto"
-              title="Restart test (Shortcut: Tab)"
-            >
-              <RotateCcw className="w-3.5 h-3.5 text-slate-400" />
-              <span>Restart (Tab)</span>
-            </button>
+            <div className="flex items-center gap-2 text-[11px] font-mono text-slate-400">
+              <span>Tab - restart</span>
+              <span>•</span>
+              <span>Esc - cancel</span>
+            </div>
           </div>
         </div>
       ) : (
@@ -582,7 +638,7 @@ export function SpeedTestView({ onBackToPractice, isMuted = false }) {
               {rank.title}
             </h2>
           </div>
-          <p className="text-xs sm:text-sm text-slate-500 mb-6 text-center max-w-md">
+          <p className="text-xs sm:text-sm text-slate-500 mb-6 text-center max-w-md font-medium">
             {rank.desc}
           </p>
 
@@ -669,7 +725,7 @@ export function SpeedTestView({ onBackToPractice, isMuted = false }) {
           <div className="flex flex-wrap items-center justify-center gap-3">
             <button
               onClick={() => handleResetTest(duration, testMode)}
-              className="flex items-center gap-2 px-6 py-2.5 rounded-2xl font-bold text-sm bg-gradient-to-r from-indigo-600 to-violet-600 text-white shadow-md hover:shadow-lg hover:scale-102 transition-all"
+              className="flex items-center gap-2 px-6 py-2.5 rounded-2xl font-bold text-sm bg-gradient-to-r from-indigo-600 to-violet-600 text-white shadow-md hover:shadow-lg hover:scale-102 transition-all cursor-pointer"
             >
               <RotateCcw className="w-4 h-4" />
               <span>Take Another Test (Enter)</span>
@@ -677,7 +733,7 @@ export function SpeedTestView({ onBackToPractice, isMuted = false }) {
 
             <button
               onClick={onBackToPractice}
-              className="flex items-center gap-2 px-5 py-2.5 rounded-2xl font-bold text-sm bg-slate-100 hover:bg-slate-200/80 text-slate-700 transition-colors"
+              className="flex items-center gap-2 px-5 py-2.5 rounded-2xl font-bold text-sm bg-slate-100 hover:bg-slate-200/80 text-slate-700 transition-colors cursor-pointer"
             >
               <span>Back to Practice</span>
               <ArrowRight className="w-4 h-4 text-slate-500" />

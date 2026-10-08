@@ -515,19 +515,16 @@ export function App() {
         }
       />
 
-      {/* Category Pills Bar (Always accessible, with Score Test button highlighted on the right) */}
-      {(practiceMode === 'auto' || practiceMode === 'speedtest') && (
+      {/* Category Pills Bar (Only shown in sentence practice mode, hidden in speed test to avoid clutter) */}
+      {practiceMode === 'auto' && (
         <CategoryBar
           selectedCategory={selectedCategory}
           onSelectCategory={(catId) => {
-            setPracticeMode('auto')
             handleSelectCategory(catId)
           }}
           todayCompletedCount={streakData.todayCount || 0}
-          onOpenSpeedTest={() =>
-            setPracticeMode(practiceMode === 'speedtest' ? 'auto' : 'speedtest')
-          }
-          isSpeedTestActive={practiceMode === 'speedtest'}
+          onOpenSpeedTest={() => setPracticeMode('speedtest')}
+          isSpeedTestActive={false}
         />
       )}
 
