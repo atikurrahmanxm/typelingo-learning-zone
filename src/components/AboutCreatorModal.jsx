@@ -98,12 +98,12 @@ export function AboutCreatorModal({ isOpen, onClose }) {
             {/* Creator Title Badge */}
             <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-indigo-50 text-indigo-700 border border-indigo-200/80 mt-1 shadow-2xs">
               <Code2 className="w-3.5 h-3.5 text-indigo-600" />
-              <span>Lead Developer & Creator of TypeLingo</span>
+              <span>Lead Developer & Creator of TypeWithLearn</span>
             </div>
 
             {/* Developer Bio in English */}
             <p className="text-xs sm:text-[13px] text-slate-600 mt-2.5 max-w-md mx-auto leading-relaxed">
-              Full-Stack Developer passionate about crafting high-performance, user-centric web applications. Built <strong className="text-slate-800 font-bold">TypeLingo Zone</strong> to elevate English pronunciation, active listening, and high-speed typing into an intuitive daily practice.
+              Full-Stack Developer passionate about crafting high-performance, user-centric web applications. Built <strong className="text-slate-800 font-bold">TypeWithLearn</strong> to elevate English pronunciation, active listening, and high-speed typing into an intuitive daily practice.
             </p>
 
             {/* Action Links: Portfolio Website & LinkedIn */}

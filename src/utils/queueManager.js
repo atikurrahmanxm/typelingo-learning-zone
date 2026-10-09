@@ -1,4 +1,4 @@
-// Smart Non-Repeating Random Queue Engine & Streak System for TypeLingo Zone
+// Smart Non-Repeating Random Queue Engine & Streak System for TypeWithLearn
 // Built by Atikur Rahman
 
 const STORAGE_SEEN_KEY = 'youtype_seen_exercise_ids'

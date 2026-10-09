@@ -524,7 +524,7 @@ export function App() {
       <Header
         courseTitle={
           practiceMode === 'auto'
-            ? currentExercise.category || 'TypeLingo Zone'
+            ? currentExercise.category || 'TypeWithLearn'
             : practiceMode === 'speedtest'
             ? 'Score & Speed Test'
             : currentCourse.title

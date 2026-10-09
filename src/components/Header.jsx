@@ -48,7 +48,7 @@ export function Header({
             title="হোম পেজ / মূল প্র্যাকটিসে যান (Home - All Sentences)"
           >
             <span className="font-extrabold text-base tracking-tight bg-gradient-to-r from-indigo-600 to-violet-600 bg-clip-text text-transparent group-hover:opacity-85 transition-opacity">
-              TypeLingo
+              TypeWithLearn
             </span>
           </button>
 

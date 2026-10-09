@@ -1,6 +1,6 @@
 <div align="center">
 
-# ⚡ TypeLingo Learning Zone
+# ⚡ TypeWithLearn
 ### *Interactive "Listen, Learn & Type" English Mastery & Typing Speed Platform*
 
 [![TypeLingo Banner](public/images/typelingo-banner.jpg)](https://github.com/atikurrahmanxm/typelingo-learning-zone)
@@ -15,7 +15,7 @@
 <br />
 
 <p align="center">
-  <b>TypeLingo Learning Zone</b> is a modern, high-performance web platform that bridges <b>English Language Acquisition</b> with <b>Muscle Memory Touch Typing</b>. Listen to authentic neural voices, type with fluid tactile feedback, analyze real-time grammatical roles, and test typing velocity across 130+ non-repeating intellectual passages.
+  <b>TypeWithLearn</b> is a modern, high-performance web platform that bridges <b>English Language Acquisition</b> with <b>Muscle Memory Touch Typing</b>. Listen to authentic neural voices, type with fluid tactile feedback, analyze real-time grammatical roles, and test typing velocity across 130+ non-repeating intellectual passages.
 </p>
 
 [**Live Demo**](#-deployment--hosting) • [**Key Features**](#-key-features) • [**Speed Test Arena**](#-pro-speed--score-test-arena) • [**Keyboard Shortcuts**](#-keyboard-shortcuts) • [**Getting Started**](#-getting-started)
@@ -24,11 +24,11 @@
 
 </div>
 
-## 🌟 Why TypeLingo?
+## 🌟 Why TypeWithLearn?
 
 Most typing platforms focus purely on mindless word repetitions (`the`, `quick`, `brown`, `fox`). On the other hand, traditional language apps focus on multiple-choice quizzes that neglect tactile motor memory.
 
-**TypeLingo synthesizes both disciplines:**
+**TypeWithLearn synthesizes both disciplines:**
 - **Auditory Memory:** Hear natural sentence rhythm and pronunciation before typing.
 - **Cognitive Comprehension:** Understand structural syntax through color-coded grammatical roles (*Subject, Verb, Object, Preposition, Determiner*).
 - **Dual-Language Clarity:** Crystal-clear Bengali translations powered by Google's Hind Siliguri font.
@@ -65,7 +65,7 @@ Most typing platforms focus purely on mindless word repetitions (`the`, `quick`,
 
 ## ⚡ Pro Speed & Score Test Arena
 
-Inspired by modern, distraction-free typing platforms (such as *Monkeytype*), TypeLingo includes an integrated **Speed & Score Test Suite**:
+Inspired by modern, distraction-free typing platforms (such as *Monkeytype*), TypeWithLearn includes an integrated **Speed & Score Test Suite**:
 
 - **3 Dynamic Test Modes:**
   - 📝 **Words Mode (Default):** Curated pool of 200+ high-frequency English vocabulary words displayed in full, balanced rows.
@@ -180,7 +180,7 @@ The optimized production bundle will be generated inside the `dist/` directory.
 
 ## 🌐 Deployment & Hosting
 
-TypeLingo is a purely client-side Single Page Application (SPA), making it completely free to deploy with zero server maintenance.
+TypeWithLearn is a purely client-side Single Page Application (SPA), making it completely free to deploy with zero server maintenance.
 
 ### Deploy to Vercel (Recommended)
 1. Fork or push this repository to your GitHub account.
