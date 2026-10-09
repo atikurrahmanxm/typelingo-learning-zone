@@ -938,7 +938,7 @@ export const ALL_EXERCISES = SENTENCES_3000
 // Category metadata with icons, colors & counts for UI category selector
 export const CATEGORIES_SUMMARY = [
   { id: 'all', name: 'All Sentences', bn: 'সব বাক্য (৩,০০০টি)', count: 3000, color: 'indigo' },
-  { id: 'daily-challenge', name: 'Daily 10 Challenge', bn: 'আজকের ১০টি চ্যালেঞ্জ 🔥', count: 10, color: 'amber' },
+  { id: 'daily-challenge', name: 'Daily Challenge', bn: 'আজকের ১০টি চ্যালেঞ্জ 🔥', count: 10, color: 'amber' },
   { id: 'Modal Verbs', name: 'Modal Verbs', bn: 'মডাল ভার্বস (Can, Should, Must)', count: 870, color: 'sky' },
   { id: 'Tense: Present', name: 'Present Tense', bn: 'বর্তমান কাল', count: 777, color: 'teal' },
   { id: 'Tense: Future', name: 'Future Tense', bn: 'ভবিষ্যত কাল', count: 601, color: 'violet' },
