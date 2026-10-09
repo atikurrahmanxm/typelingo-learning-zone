@@ -1,121 +1,224 @@
 <div align="center">
 
-# 🎧 TypeLingo Learning Zone
-### *Interactive "Listen and Write What You Hear" English Typing Platform*
+# ⚡ TypeLingo Learning Zone
+### *Interactive "Listen, Learn & Type" English Mastery & Typing Speed Platform*
 
 [![TypeLingo Banner](public/images/typelingo-banner.jpg)](https://github.com/atikurrahmanxm/typelingo-learning-zone)
 
-[![React](https://img.shields.io/badge/React-18.3-61dafb?logo=react&logoColor=black)](https://react.dev/)
-[![Vite](https://img.shields.io/badge/Vite-6.0-646CFF?logo=vite&logoColor=white)](https://vitejs.dev/)
-[![Tailwind CSS](https://img.shields.io/badge/TailwindCSS-3.4-38B2AC?logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
-[![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
-[![GitHub stars](https://img.shields.io/github/stars/atikurrahmanxm/typelingo-learning-zone?style=social)](https://github.com/atikurrahmanxm/typelingo-learning-zone)
+[![React](https://img.shields.io/badge/React-18.3-61dafb?style=for-the-badge&logo=react&logoColor=black)](https://react.dev/)
+[![Vite](https://img.shields.io/badge/Vite-6.0-646CFF?style=for-the-badge&logo=vite&logoColor=white)](https://vitejs.dev/)
+[![Tailwind CSS](https://img.shields.io/badge/TailwindCSS-3.4-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
+[![Sentences](https://img.shields.io/badge/Practice_Sentences-3%2C000%2B-indigo?style=for-the-badge&logo=book&logoColor=white)](https://github.com/atikurrahmanxm/typelingo-learning-zone)
+[![Speed Passages](https://img.shields.io/badge/Speed_Passages-130%2B-emerald?style=for-the-badge&logo=zap&logoColor=white)](https://github.com/atikurrahmanxm/typelingo-learning-zone)
+[![License](https://img.shields.io/badge/License-MIT-green.svg?style=for-the-badge)](LICENSE)
+
+<br />
 
 <p align="center">
-  <b>TypeLingo Learning Zone</b> হলো একটি আধুনিক ও ইন্টারেক্টিভ ইংরেজি শেখার ও টাইপিং প্র্যাকটিস প্ল্যাটফর্ম। প্রাকৃতিক মানুষের কণ্ঠস্বর শুনে শুনে টাইপ করুন, প্রতিটি শব্দের ব্যাকরণগত ভূমিকা (Grammar Role) শিখুন এবং গুগল হিন্ড শিলিগুড়ি ফন্টে স্পষ্ট বাংলা অর্থ উপভোগ করুন।
+  <b>TypeLingo Learning Zone</b> is a modern, high-performance web platform that bridges <b>English Language Acquisition</b> with <b>Muscle Memory Touch Typing</b>. Listen to authentic neural voices, type with fluid tactile feedback, analyze real-time grammatical roles, and test typing velocity across 130+ non-repeating intellectual passages.
 </p>
 
-[লাইভ ডেমো](#-deployment--hosting) • [ফিচারসমূহ](#-key-features) • [কিবোর্ড শর্টকাট](#-keyboard-shortcuts) • [রান করার নিয়ম](#-getting-started)
+[**Live Demo**](#-deployment--hosting) • [**Key Features**](#-key-features) • [**Speed Test Arena**](#-pro-speed--score-test-arena) • [**Keyboard Shortcuts**](#-keyboard-shortcuts) • [**Getting Started**](#-getting-started)
 
 ---
 
 </div>
 
-## 🌟 Key Features (প্রধান সুবিধাসমূহ)
+## 🌟 Why TypeLingo?
 
-- 🎧 **Natural Neural Human Voice (প্রাকৃতিক অডিও উচ্চারণ):**
-  - মাইক্রোসফট এজ জেনিনীউরাল (JennyNeural) দিয়ে তৈরি **৪৯+ বাস্তবসম্মত উচ্চমানের ইংরেজি বাক্য**।
-  - বাক্য শেষ হওয়ামাত্র স্বয়ংক্রিয়ভাবে পরবর্তী অডিও স্পষ্ট উচ্চারণে বেজে ওঠে।
+Most typing platforms focus purely on mindless word repetitions (`the`, `quick`, `brown`, `fox`). On the other hand, traditional language apps focus on multiple-choice quizzes that neglect tactile motor memory.
 
-- 🔀 **Smart Random & Non-Repeating Mode (স্মার্ট অটোমেটিক প্র্যাকটিস):**
-  - ৪৯টি বাক্য সম্পূর্ণ এলোমেলোভাবে (Shuffle) আসবে।
-  - মেমোরি স্টোরেজের মাধ্যমে পূর্বে প্র্যাকটিস করা বাক্য ঘনঘন পুনরাবৃত্তি হবে না।
-  - ৩টি বাক্যের পর আটকে না গিয়ে একটানা **১০০% অটোমেটিক ও নন-স্টপ** প্র্যাকটিস চলবে।
-
-- 🇧🇩 **Bangla Translation in Hind Siliguri (সহজ ও সাবলীল বাংলা অর্থ):**
-  - পুরো বাক্যের অর্থ এবং প্রতিটি একক শব্দের বাংলা অর্থ **Google Hind Siliguri** ফন্টে বড় ও স্পষ্ট হরফে প্রদর্শিত হয়।
-
-- 🏷️ **Grammar Tokens & Role Chips (ব্যাকরণগত ভূমিকা):**
-  - প্রতিটি শব্দের জন্য কালার-কোডেড ব্যাজ: *Subject, Verb, Object, Preposition, Determiner, Adjective, Adverb, Modifier*।
-  - বর্তমানে কোন শব্দ টাইপ হচ্ছে তার জন্য রিয়েল-টাইম পার্পল গ্লো এবং অ্যাক্টিভ ডট।
-
-- ⌨️ **Tactile Typing & Separated Underlines (টেকটাইল টাইপিং ফ্লো):**
-  - প্রতিটি শব্দের জন্য আলাদা আন্ডারলাইন স্লট এবং ব্লিংকিং কার্সর।
-  - মেকানিক্যাল কীবোর্ড ক্লিক সাউন্ড ও স্পেসবারে শব্দ শেষ হওয়ার সন্তুষ্টিদায়ক চাইম।
-  - ভুল হলে ভাইব্রেশন ও এরর টোন।
-
-- 🖥️ **Fluid Responsive Auto-Scaling (জিরো স্ক্রলবার গ্যারান্টি):**
-  - ৪ শব্দের ছোট বাক্য থেকে ৭-৮ শব্দের বড় বাক্য—সবকিছু যেকোনো ল্যাপটপ বা মনিটরে এক লাইনে সুন্দরভাবে অটো-ফিট হয়ে যায়।
-  - বিরক্তিকর অনুভূমিক (horizontal) স্ক্রলবার চিরতরে বন্ধ।
-
-- 📚 **Comprehensive Curriculum (বিস্তৃত সিলেবাস):**
-  - **Restart English:** বেসিক পরিচয় ও প্রাথমিক কথপোকথন।
-  - **Present Tense (বর্তমান কাল):** দৈনন্দিন অভ্যাস ও চলমান সত্য।
-  - **Past Tense (অতীত কাল):** অতীতের ঘটনা ও অভিজ্ঞতা।
-  - **Future Tense (ভবিষ্যত কাল):** ভবিষ্যৎ পরিকল্পনা ও লক্ষ্য।
-  - **Modal Verbs (মোডাল ভার্ব):** Can, Could, Should, Must, Would এর ব্যবহার।
-  - **Daily Talk & Questions:** বাস্তব জীবনের গুরুত্বপূর্ণ প্রশ্ন ও উত্তর।
-  - **Custom Practice:** যেকোনো ইংরেজি টেক্সট বা প্যারাগ্রাফ পেস্ট করে প্র্যাকটিস করার সুবিধা।
+**TypeLingo synthesizes both disciplines:**
+- **Auditory Memory:** Hear natural sentence rhythm and pronunciation before typing.
+- **Cognitive Comprehension:** Understand structural syntax through color-coded grammatical roles (*Subject, Verb, Object, Preposition, Determiner*).
+- **Dual-Language Clarity:** Crystal-clear Bengali translations powered by Google's Hind Siliguri font.
+- **Motor Speed Execution:** A dedicated, clutter-free Speed Test suite engineered for high-velocity typing without visual distractions.
 
 ---
 
-## ⌨️ Keyboard Shortcuts (কীবোর্ড শর্টকাট)
+## 🚀 Key Features
 
-| শর্টকাট | কাজ |
+### 1. 🎧 Neural Auditory Immersion ("Listen & Type")
+- Realistic audio synthesis powered by Edge Neural Voices (`en-US-JennyNeural`).
+- Seamless automatic playback: as soon as an exercise is completed, the next sentence sounds naturally.
+- Animated audio waveform equalizer with one-key instant replay (<kbd>Tab</kbd>).
+
+### 2. 📚 3,000+ Master English Practice Sentences
+- Structured curriculum covering:
+  - **Restart English:** Essential introductions and foundational dialogues.
+  - **Tense Mastery:** Present, Past, and Future tenses with practical context.
+  - **Modal Verbs:** Deep drills on *Can, Could, Should, Must, Would, May, Might*.
+  - **Daily Phrases & Work Communication:** Office meetings, networking, and common idioms.
+  - **Questions & Answers:** Natural inquiry structures and conversational responses.
+- **Smart Queue Engine:** Fisher-Yates randomization backed by `localStorage` prevents repetitive sentence cycles and enables 100% uninterrupted auto-practice.
+
+### 3. 🏷️ Real-Time Grammatical Role Breakdown
+- Individual word tokens color-coded by linguistic function:
+  - <span style="color:#6366f1">●</span> **Subject** &nbsp;|&nbsp; <span style="color:#10b981">●</span> **Verb** &nbsp;|&nbsp; <span style="color:#f59e0b">●</span> **Object** &nbsp;|&nbsp; <span style="color:#ec4899">●</span> **Preposition** &nbsp;|&nbsp; <span style="color:#8b5cf6">●</span> **Determiner** &nbsp;|&nbsp; <span style="color:#06b6d4">●</span> **Adjective/Adverb**
+- Active word highlighting with purple glow and live progress tracking.
+
+### 4. 🇧🇩 Native Dual-Language Support
+- High-legibility Bengali sentence translations and word-by-word glossaries rendered in **Google Hind Siliguri** font.
+- Designed specifically for ESL learners and Bengali speakers aiming for fluent bilingual fluency.
+
+---
+
+## ⚡ Pro Speed & Score Test Arena
+
+Inspired by modern, distraction-free typing platforms (such as *Monkeytype*), TypeLingo includes an integrated **Speed & Score Test Suite**:
+
+- **3 Dynamic Test Modes:**
+  - 📝 **Words Mode (Default):** Curated pool of 200+ high-frequency English vocabulary words displayed in full, balanced rows.
+  - 📖 **Paragraphs Mode:** **130+ unique, beautifully written non-repeating passages** (50–65 words each) across 9 intellectual categories:
+    - *Wisdom & Habits*, *Science & Space*, *Nature & Earth*, *Tech & Future*, *History & Wonders*, *Art & Literature*, *Mind & Potential*, *Daily Serenity*, and *Typing & Flow*.
+  - 💬 **Sentences Mode:** Continuous chain of real-world conversational sentences.
+- **Flexible Test Durations:** `15s`, `30s`, `60s`, or `120s`.
+- **Zero-Distraction Minimalist Canvas:**
+  - Single-row segmented control toolbar.
+  - Generous line height and responsive font scaling with zero vertical/horizontal window scrollbars.
+  - Unbroken reading flow: entire paragraphs stay steady on screen without sudden jumping lines or half-sliced characters.
+- **Real-Time Telemetry:** Live WPM, countdown timer, and precision accuracy counter.
+- **Comprehensive Score Certificate:**
+  - Net WPM, Raw WPM, Accuracy %, Keystroke analysis (Correct vs. Errors).
+  - Rank classifications: *Godspeed Master (100+ WPM)*, *Pro Speed Typer (80+ WPM)*, *Fast & Fluent (60+ WPM)*, *Solid Intermediate*, and *Developing Typer*.
+  - Personal Best records saved to `localStorage` with celebratory confetti animations.
+
+---
+
+## ⌨️ Keyboard Shortcuts
+
+| Shortcut | Action | Scope |
+| :--- | :--- | :--- |
+| <kbd>Space</kbd> | Submit current word and advance | Practice & Speed Test |
+| <kbd>Tab</kbd> | Replay sentence audio | Sentence Practice |
+| <kbd>Tab</kbd> | Instant Restart Test | Speed Test Arena |
+| <kbd>Esc</kbd> | Cancel / Reset Test | Speed Test Arena |
+| <kbd>Ctrl</kbd> + <kbd>Space</kbd> | Show hint for current word | Sentence Practice |
+| <kbd>Ctrl</kbd> + <kbd>H</kbd> | Toggle preview text visibility | Sentence Practice |
+| <kbd>Backspace</kbd> | Delete character / correct mistyped input | Global |
+
+---
+
+## 🛠️ Technology Stack
+
+| Layer | Technologies |
 | :--- | :--- |
-| <kbd>Tab</kbd> | বর্তমান বাক্যের অডিও পুনরায় শুনুন (Replay Voice) |
-| <kbd>Ctrl</kbd> + <kbd>Space</kbd> | বর্তমান শব্দের হিন্ট দেখুন (Hint for Word) |
-| <kbd>Ctrl</kbd> + <kbd>H</kbd> | প্রিভিউ হাইড / শো টগল করুন (Hide Preview) |
-| <kbd>Space</kbd> | পরবর্তী শব্দে চলে যান |
-| <kbd>Backspace</kbd> | পূর্ববর্তী বর্ণ বা শব্দ মুছুন |
+| **Frontend Framework** | [React 18.3](https://react.dev/) (Functional components, custom hooks, memoization) |
+| **Build & Bundler** | [Vite 6.0](https://vitejs.dev/) (Lightning-fast HMR and optimized Rollup build) |
+| **Styling & Design System** | [Tailwind CSS 3.4](https://tailwindcss.com/) (Custom typography, fluid clamp scaling, glassmorphism) |
+| **Typography** | Google Fonts (*Hind Siliguri*, *Plus Jakarta Sans*, *Outfit*, *JetBrains Mono*) |
+| **Icons** | [Lucide React](https://lucide.dev/) |
+| **Audio Engine** | HTML5 Web Audio API, Synthesized Neural TTS Audio |
+| **Celebration & FX** | [Canvas Confetti](https://www.npmjs.com/package/canvas-confetti) |
+| **State & Persistence** | Browser `localStorage` for streak tracking, XP score, and non-repeating queue memory |
 
 ---
 
-## 🛠️ Tech Stack (প্রযুক্তি)
+## 📂 Project Architecture
 
-- **Frontend Library:** [React 18](https://react.dev/)
-- **Build Tool:** [Vite 6](https://vitejs.dev/)
-- **Styling:** [Tailwind CSS 3](https://tailwindcss.com/)
-- **Typography:** Google Fonts (*Hind Siliguri, Plus Jakarta Sans, Outfit, JetBrains Mono*)
-- **Icons:** [Lucide React](https://lucide.dev/)
-- **Celebration Effects:** Canvas Confetti
-- **Audio Engine:** HTML5 Web Audio API & Edge TTS Synthesizer
+```plaintext
+typelingo-learning-zone/
+├── public/
+│   ├── audio/                     # Synthesized neural sentence MP3 clips
+│   ├── images/                    # UI assets, banners, and icons
+│   └── favicon.svg                # Application branding
+├── src/
+│   ├── components/
+│   │   ├── Header.jsx             # Top branding, live stats capsule & audio toggles
+│   │   ├── CategoryBar.jsx        # Sentence topic selector pills
+│   │   ├── WordChips.jsx          # Grammar tokens, chips & Bengali translations
+│   │   ├── PromptAudio.jsx        # Audio waveform visualizer & playback prompt
+│   │   ├── TypingInput.jsx        # Tactile sentence input box with underline slots
+│   │   ├── ShortcutBar.jsx        # Helper controls & practice navigation
+│   │   ├── SpeedTestView.jsx      # Minimalist pro speed & score test arena
+│   │   └── Footer.jsx             # Progress tracker, reset options & attribution
+│   ├── data/
+│   │   ├── exercises.js           # 3,000+ categorized practice sentences & vocabulary
+│   │   └── speedTestParagraphs.js # 130+ non-repeating intellectual passages
+│   ├── utils/
+│   │   ├── audioPlayer.js         # Web Audio API sound synthesis & keypress acoustics
+│   │   ├── speedTestQueue.js      # Fisher-Yates queue engine & unread passage tracker
+│   │   └── storage.js             # LocalStorage streak, score & completion state
+│   ├── App.jsx                    # Root view orchestrator & mode routing
+│   └── main.jsx                   # React 18 DOM root entry point
+├── package.json                   # Dependencies & build scripts
+└── vite.config.js                 # Vite build optimization configuration
+```
 
 ---
 
-## 🚀 Getting Started (রান করার নিয়ম)
+## 🚀 Getting Started
 
-### ১. ক্লোন করুন এবং প্যাকেজ ইনস্টল করুন:
+### Prerequisites
+- [Node.js](https://nodejs.org/) (Version 18.0 or higher recommended)
+- `npm` or `yarn`
+
+### 1. Clone the Repository
 ```bash
 git clone https://github.com/atikurrahmanxm/typelingo-learning-zone.git
 cd typelingo-learning-zone
+```
+
+### 2. Install Dependencies
+```bash
 npm install
 ```
 
-### ২. ডেভেলপমেন্ট সার্ভার চালু করুন:
+### 3. Run Local Development Server
 ```bash
 npm run dev
 ```
-ব্রাউজারে ওপেন করুন: **`http://localhost:3000`**
+Open **`http://localhost:3000`** (or the port specified in terminal output) in your browser.
 
-### ৩. প্রোডাকশন বিল্ড তৈরি করতে:
+### 4. Build for Production
 ```bash
 npm run build
 ```
+The optimized production bundle will be generated inside the `dist/` directory.
 
 ---
 
-## 🌐 Deployment & Hosting (বিনামূল্যে হোস্ট করার নিয়ম)
+## 🌐 Deployment & Hosting
 
-এই প্রজেক্টটি খুব সহজেই **Vercel** অথবা **Netlify**-তে ফ্রিতে ডিপ্লয় করা যায়:
+TypeLingo is a purely client-side Single Page Application (SPA), making it completely free to deploy with zero server maintenance.
 
-### Vercel দিয়ে ডিপ্লয়:
-1. [Vercel](https://vercel.com/)-এ আপনার GitHub অ্যাকাউন্ট দিয়ে লগইন করুন।
-2. **Add New Project**-এ ক্লিক করে `typelingo-learning-zone` রিপোজিটোরি সিলেক্ট করুন।
-3. **Deploy** বাটনে ক্লিক করুন — ১ মিনিটের মধ্যে লাইভ লিংক তৈরি হয়ে যাবে!
+### Deploy to Vercel (Recommended)
+1. Fork or push this repository to your GitHub account.
+2. Sign in to [Vercel](https://vercel.com/) and click **Add New Project**.
+3. Select your `typelingo-learning-zone` repository.
+4. Keep the default settings (Framework: Vite) and click **Deploy**.
+5. Your live URL will be ready in under 60 seconds!
+
+### Deploy to Netlify
+1. Log in to [Netlify](https://www.netlify.com/).
+2. Select **Add new site** > **Import an existing project**.
+3. Choose GitHub and select `typelingo-learning-zone`.
+4. Build command: `npm run build` | Publish directory: `dist`.
+5. Click **Deploy Site**.
+
+---
+
+## 🤝 Contributing
+
+Contributions, feedback, and suggestions are warmly welcomed!
+1. Fork the Project.
+2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`).
+3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`).
+4. Push to the Branch (`git push origin feature/AmazingFeature`).
+5. Open a Pull Request.
+
+---
+
+## 📄 License
+
+Distributed under the **MIT License**. See [`LICENSE`](LICENSE) for more information.
 
 ---
 
 <div align="center">
-  <sub>Developed with ❤️ by <a href="https://github.com/atikurrahmanxm">Atikur Rahman</a></sub>
+
+Crafted with dedication & passion by **[Atikur Rahman](https://github.com/atikurrahmanxm)**
+
+*If this project helps you improve your English or typing speed, consider starring ⭐ the repository!*
+
 </div>

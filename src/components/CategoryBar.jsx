@@ -1,5 +1,5 @@
 import React from 'react'
-import { Sparkles, Flame, Zap } from 'lucide-react'
+import { Sparkles, Flame, Gauge } from 'lucide-react'
 import { CATEGORIES_SUMMARY } from '../data/lessons'
 
 export function CategoryBar({
@@ -40,20 +40,24 @@ export function CategoryBar({
           })}
         </div>
 
-        {/* Right side: Single Distinct Score Test Button with clean divider */}
+        {/* Right side: High-Visibility Speed Test Button with clean divider */}
         {onOpenSpeedTest && (
           <div className="flex items-center shrink-0 border-l border-slate-200/90 pl-2 sm:pl-3">
             <button
               onClick={onOpenSpeedTest}
-              className={`flex items-center gap-1.5 px-3.5 py-1 rounded-xl text-xs font-bold whitespace-nowrap transition-all shrink-0 border shadow-2xs ${
+              className={`group flex items-center gap-1.5 px-3 sm:px-3.5 py-1 rounded-xl text-xs font-bold whitespace-nowrap transition-all shrink-0 border shadow-xs cursor-pointer active:scale-95 ${
                 isSpeedTestActive
-                  ? 'bg-amber-500 text-white border-amber-600 shadow-xs ring-2 ring-amber-400/30'
-                  : 'bg-amber-50 text-amber-800 border-amber-300 hover:bg-amber-100 hover:text-amber-900'
+                  ? 'bg-indigo-600 text-white border-indigo-700 ring-2 ring-indigo-400/30 shadow-xs'
+                  : 'bg-gradient-to-r from-indigo-600 via-indigo-700 to-violet-700 hover:from-indigo-700 hover:to-violet-800 text-white border-indigo-700 shadow-xs hover:shadow-sm'
               }`}
-              title="Typing Speed & Score Test"
+              title="টাইপিং স্পিড টেস্ট (Speed Test — WPM ও নিখুঁততার পরীক্ষা)"
+              aria-label="Open Typing Speed Test"
             >
-              <Zap className={`w-3.5 h-3.5 ${isSpeedTestActive ? 'text-white' : 'text-amber-500 fill-amber-500 animate-pulse'}`} />
-              <span>Score Test</span>
+              <Gauge className="w-3.5 h-3.5 text-amber-300 group-hover:rotate-12 transition-transform duration-200" />
+              <span>Speed Test</span>
+              <span className="hidden sm:inline-flex items-center px-1.5 py-0.2 text-[9px] font-black uppercase tracking-wider bg-amber-400 text-slate-900 rounded font-mono shadow-2xs">
+                WPM
+              </span>
             </button>
           </div>
         )}

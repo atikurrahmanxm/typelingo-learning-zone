@@ -6,6 +6,7 @@ import {
   Flame,
   Shuffle,
   Zap,
+  Gauge,
   Target,
   SlidersHorizontal,
   UserCheck,
@@ -54,7 +55,7 @@ export function Header({
 
           {practiceMode === 'speedtest' ? (
             <span className="flex items-center gap-1.5 text-xs font-bold text-indigo-700 bg-indigo-50 border border-indigo-200/80 px-2.5 py-1 rounded-lg">
-              <Zap className="w-3.5 h-3.5 text-indigo-600 fill-indigo-600" />
+              <Gauge className="w-3.5 h-3.5 text-indigo-600" />
               <span>Speed Test (130+ Passages)</span>
             </span>
           ) : (

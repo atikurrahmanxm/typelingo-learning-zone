@@ -366,9 +366,10 @@ export function SpeedTestView({ onBackToPractice, isMuted = false }) {
         {/* Back Button */}
         <button
           onClick={onBackToPractice}
-          className="flex items-center gap-1.5 text-xs font-bold text-slate-600 hover:text-indigo-600 bg-white hover:bg-slate-50 px-3 py-1.5 rounded-xl border border-slate-200/80 shadow-2xs transition-all cursor-pointer"
+          className="flex items-center gap-1.5 text-xs font-bold text-white bg-indigo-600 hover:bg-indigo-700 px-3.5 py-1.5 rounded-xl border border-indigo-700 shadow-xs transition-all cursor-pointer active:scale-95"
+          title="অনুশীলনে ফিরে যান (Back to Practice)"
         >
-          <ChevronLeft className="w-4 h-4 text-slate-400" />
+          <ChevronLeft className="w-4 h-4 text-white" />
           <span>Back to Practice</span>
         </button>
 
@@ -533,6 +534,8 @@ export function SpeedTestView({ onBackToPractice, isMuted = false }) {
           >
             {(testMode === 'paragraphs'
               ? words
+              : testMode === 'words'
+              ? words.slice(Math.max(0, currentWordIndex - 3), currentWordIndex + 30)
               : words.slice(Math.max(0, currentWordIndex - 3), currentWordIndex + 35)
             ).map((word, relIdx) => {
               const absIdx = testMode === 'paragraphs' ? relIdx : Math.max(0, currentWordIndex - 3) + relIdx

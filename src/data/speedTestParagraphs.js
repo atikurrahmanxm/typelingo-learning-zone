@@ -1,4 +1,4 @@
-// 130+ Curated, Diverse, Non-Repeating Typing Paragraphs for Score Test
+// 130+ Curated, Diverse, Non-Repeating Typing Paragraphs for Speed Test
 // Each paragraph is between 45-75 words, beautifully written across 9 distinct categories.
 
 export const SPEED_PARAGRAPHS = [
