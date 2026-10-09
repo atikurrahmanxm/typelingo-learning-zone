@@ -71,7 +71,7 @@ export function WordChips({
     <div className="w-full flex flex-col items-center justify-center my-2 sm:my-3">
       {/* Clean Full Bengali Sentence Translation (No redundant label) */}
       {bengaliMeaning && (
-        <div className="text-center mb-5 sm:mb-7 px-4">
+        <div className="text-center mb-3 sm:mb-5 px-4">
           <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-[38px] font-bold text-slate-900 font-siliguri tracking-normal leading-snug">
             {bengaliMeaning}
           </h2>

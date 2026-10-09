@@ -69,10 +69,17 @@ export function Header({
                 <span className="truncate">{category || courseTitle || lessonTitle}</span>
               </button>
 
-              {/* Minimal Exercise Counter */}
-              <span className="text-xs font-semibold text-slate-400 whitespace-nowrap">
-                {currentIndex + 1} / {totalExercises}
-              </span>
+              {/* Encouraging Sentence Counter (No overwhelming /3000) */}
+              {category === 'Daily Challenge' ? (
+                <span className="flex items-center gap-1 text-xs font-bold text-amber-700 bg-amber-50 border border-amber-200/80 px-2 py-0.5 rounded-lg">
+                  <Flame className="w-3 h-3 text-amber-500 fill-amber-500" />
+                  <span>Goal: {Math.min(currentIndex + 1, 10)}/10</span>
+                </span>
+              ) : (
+                <span className="text-xs font-semibold text-slate-500 bg-slate-100/90 border border-slate-200/70 px-2 py-0.5 rounded-lg whitespace-nowrap">
+                  Sentence #{currentIndex + 1}
+                </span>
+              )}
             </>
           )}
         </div>

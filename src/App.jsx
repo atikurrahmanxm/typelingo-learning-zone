@@ -571,14 +571,14 @@ export function App() {
       {/* 
         Main Practice Container - Auto-Centered with zero scrollbars:
       */}
-      <main className="flex-1 w-full max-w-6xl mx-auto px-3 sm:px-6 md:px-8 py-3 sm:py-6 flex flex-col items-center justify-center">
+      <main className="flex-1 w-full max-w-6xl mx-auto px-3 sm:px-6 py-1.5 sm:py-2.5 flex flex-col items-center justify-center">
         {practiceMode === 'speedtest' ? (
           <SpeedTestView
             onBackToPractice={() => setPracticeMode('auto')}
             isMuted={isMuted}
           />
         ) : (
-          <div className="w-full bg-white rounded-3xl p-5 sm:p-8 md:p-10 lg:p-12 border border-slate-200/90 shadow-md flex flex-col items-center justify-between min-h-[580px] sm:min-h-[640px]">
+          <div className="w-full bg-white rounded-3xl p-4 sm:p-6 md:p-7 border border-slate-200/90 shadow-sm flex flex-col items-center justify-between min-h-[420px] sm:min-h-[450px]">
             {/* Word Cards Box with Dynamic Responsive Layout and Large Bengali Translation */}
             <WordChips
               words={targetWords}

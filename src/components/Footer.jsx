@@ -21,13 +21,13 @@ export function Footer({
   return (
     <footer className="w-full bg-white border-t border-slate-200/70 py-3.5 px-3 sm:px-6 select-none">
       <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2.5 text-xs text-slate-500">
-        {/* Left: Minimal Progress */}
-        <div className="flex items-center gap-2.5">
-          <span className="font-semibold text-slate-700">
-            {completedTotal} / {totalSentences}
-          </span>
-          <span className="text-[11px] text-slate-400">
-            ({percentCompleted}% Done)
+        {/* Left: Inspiring Sentence Mastery Counter */}
+        <div className="flex items-center gap-2">
+          <span className="inline-flex items-center gap-1.5 font-bold text-slate-700 bg-slate-100/90 border border-slate-200/60 px-2.5 py-1 rounded-lg text-xs">
+            <span>⭐</span>
+            <span>
+              {completedTotal} {completedTotal === 1 ? 'Sentence' : 'Sentences'} Mastered
+            </span>
           </span>
 
           {completedTotal > 0 && (
