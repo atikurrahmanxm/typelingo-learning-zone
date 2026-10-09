@@ -65,13 +65,13 @@ export function AboutCreatorModal({ isOpen, onClose }) {
               <div className="w-24 h-24 sm:w-28 sm:h-28 p-1.5 bg-white rounded-2xl shadow-xl ring-2 ring-indigo-100">
                 <div className="w-full h-full rounded-xl overflow-hidden bg-slate-100 flex items-center justify-center">
                   <img
-                    src="/creator_headshot.png"
+                    src="./creator_headshot.png"
                     alt="Atikur Rahman"
                     className="w-full h-full object-cover object-center"
                     onError={(e) => {
                       if (!e.currentTarget.dataset.retried) {
                         e.currentTarget.dataset.retried = '1'
-                        e.currentTarget.src = '/creator_avatar.png'
+                        e.currentTarget.src = './creator_avatar.png'
                       } else if (e.currentTarget.dataset.retried === '1') {
                         e.currentTarget.dataset.retried = '2'
                         e.currentTarget.src = 'https://github.com/atikurrahmanxm.png'

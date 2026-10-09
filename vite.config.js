@@ -6,6 +6,7 @@ import path from 'path'
 import crypto from 'crypto'
 
 export default defineConfig({
+  base: './',
   plugins: [
     react(),
     {
