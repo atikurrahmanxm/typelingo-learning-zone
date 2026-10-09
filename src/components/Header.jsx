@@ -25,6 +25,7 @@ export function Header({
   streak = 1,
   isMuted = false,
   practiceMode = 'auto',
+  onGoHome,
   onToggleMute,
   onOpenLessonMenu,
   onRestartCurrentLesson,
@@ -42,11 +43,11 @@ export function Header({
         {/* Left: Brand + Category / Progress Counter */}
         <div className="flex items-center gap-2.5 sm:gap-3">
           <button
-            onClick={onOpenLessonMenu}
-            className="flex items-center gap-1.5 focus:outline-none"
-            title="Browse all topics"
+            onClick={onGoHome}
+            className="flex items-center gap-1.5 focus:outline-none cursor-pointer group"
+            title="হোম পেজ / মূল প্র্যাকটিসে যান (Home - All Sentences)"
           >
-            <span className="font-extrabold text-base tracking-tight bg-gradient-to-r from-indigo-600 to-violet-600 bg-clip-text text-transparent">
+            <span className="font-extrabold text-base tracking-tight bg-gradient-to-r from-indigo-600 to-violet-600 bg-clip-text text-transparent group-hover:opacity-85 transition-opacity">
               TypeLingo
             </span>
           </button>

@@ -422,6 +422,17 @@ export function App() {
     setFeedbackMessage('🔀 New random sentences loaded!')
   }
 
+  // Return to Home (Default All Sentences Practice Mode)
+  const handleGoHome = () => {
+    unlockAudio()
+    setIsLessonMenuOpen(false)
+    setIsCustomModalOpen(false)
+    setIsAboutCreatorOpen(false)
+    setIsMilestoneOpen(false)
+    setIsLessonFinished(false)
+    handleSelectCategory('all')
+  }
+
   // Switch back to auto mode
   const handleSwitchToAutoMode = () => {
     unlockAudio()
@@ -543,6 +554,7 @@ export function App() {
         streak={Math.max(1, streakData.streak || 1)}
         isMuted={isMuted}
         practiceMode={practiceMode}
+        onGoHome={handleGoHome}
         onToggleMute={() => setIsMuted(!isMuted)}
         onOpenLessonMenu={() => setIsLessonMenuOpen(true)}
         onRestartCurrentLesson={handleRestartCurrent}
