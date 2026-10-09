@@ -133,7 +133,7 @@ export function AboutCreatorModal({ isOpen, onClose }) {
             {/* Feature Highlights of the Platform */}
             <div className="pt-3.5 pb-2 space-y-2 text-left border-t border-slate-100 mt-4">
               <h4 className="text-[11px] font-black text-slate-400 uppercase tracking-wider">
-                প্ল্যাটফর্মের মূল প্রকৌশল ও সুবিধাসমূহ (KEY HIGHLIGHTS)
+                CORE PLATFORM HIGHLIGHTS
               </h4>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs text-slate-700">
@@ -144,10 +144,10 @@ export function AboutCreatorModal({ isOpen, onClose }) {
                   </div>
                   <div>
                     <strong className="block font-bold text-slate-900 text-xs">
-                      ৩,০০০+ বাস্তবসম্মত বাক্য
+                      3,000+ Practical Exercises
                     </strong>
                     <span className="text-slate-500 text-[11px] leading-tight block mt-0.5">
-                      ১৭টি ক্যাটাগরির সমৃদ্ধ কনটেন্ট ও গ্রামার লাইব্রেরি।
+                      17 structured categories covering everyday grammar & conversation.
                     </span>
                   </div>
                 </div>
@@ -159,10 +159,10 @@ export function AboutCreatorModal({ isOpen, onClose }) {
                   </div>
                   <div>
                     <strong className="block font-bold text-slate-900 text-xs">
-                      নন-রিপিটিং কিউ ইঞ্জিন
+                      Smart Queue Engine
                     </strong>
                     <span className="text-slate-500 text-[11px] leading-tight block mt-0.5">
-                      অ্যালগরিদম নিশ্চিত করে একই বাক্য বারবার যেন না আসে।
+                      Intelligent algorithm ensuring fresh, non-repeating sentences.
                     </span>
                   </div>
                 </div>
@@ -174,10 +174,10 @@ export function AboutCreatorModal({ isOpen, onClose }) {
                   </div>
                   <div>
                     <strong className="block font-bold text-slate-900 text-xs">
-                      ডেইলি চ্যালেঞ্জ ও স্ট্রিক
+                      Daily Streaks & Goals
                     </strong>
                     <span className="text-slate-500 text-[11px] leading-tight block mt-0.5">
-                      প্রতিদিনের ১০টি বাক্য ও ধারাবাহিকতা ট্র্যাকিং।
+                      Gamified 10-sentence challenges with streak tracking.
                     </span>
                   </div>
                 </div>
@@ -189,10 +189,10 @@ export function AboutCreatorModal({ isOpen, onClose }) {
                   </div>
                   <div>
                     <strong className="block font-bold text-slate-900 text-xs">
-                      রিয়েল-টাইম WPM স্পিড টেস্ট
+                      Real-Time Speed Analytics
                     </strong>
                     <span className="text-slate-500 text-[11px] leading-tight block mt-0.5">
-                      Monkeytype স্টাইল নিখুঁত স্পিড ও নির্ভুলতা বিশ্লেষণ।
+                      Live WPM, keystroke accuracy, and instant feedback.
                     </span>
                   </div>
                 </div>
@@ -221,7 +221,7 @@ export function AboutCreatorModal({ isOpen, onClose }) {
             onClick={onClose}
             className="px-5 py-2 bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-700 hover:to-violet-700 text-white font-bold text-xs rounded-xl shadow-sm hover:shadow-indigo-500/20 transition-all active:scale-95 cursor-pointer"
           >
-            অনুশীলন শুরু করুন
+            Start Practice
           </button>
         </div>
       </div>
