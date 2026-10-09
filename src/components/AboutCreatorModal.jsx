@@ -1,10 +1,24 @@
 import React from 'react'
-import { X, Heart, Code2, Sparkles, CheckCircle2, Flame, Award, Globe, BookOpen } from 'lucide-react'
+import {
+  X,
+  Sparkles,
+  Flame,
+  Gauge,
+  BookOpen,
+  ExternalLink,
+  Code2,
+  Heart,
+  Check,
+} from 'lucide-react'
 
 function GithubIcon({ className = 'w-4 h-4' }) {
   return (
     <svg className={className} viewBox="0 0 24 24" fill="currentColor">
-      <path fillRule="evenodd" clipRule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" />
+      <path
+        fillRule="evenodd"
+        clipRule="evenodd"
+        d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"
+      />
     </svg>
   )
 }
@@ -17,117 +31,224 @@ function LinkedinIcon({ className = 'w-4 h-4' }) {
   )
 }
 
+const TECH_TAGS = ['React 18', 'Tailwind CSS', 'Vite 6', 'Web Audio API', 'Neural TTS']
+
 export function AboutCreatorModal({ isOpen, onClose }) {
   if (!isOpen) return null
 
   return (
-    <div className="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-xs flex items-center justify-center p-4 select-none animate-pop-in">
-      <div className="bg-white rounded-3xl max-w-lg w-full p-6 sm:p-8 shadow-2xl border border-slate-200/90 flex flex-col relative max-h-[90vh] overflow-y-auto">
-        {/* Close Button */}
-        <button
-          onClick={onClose}
-          className="absolute top-5 right-5 p-2 rounded-xl hover:bg-slate-100 text-slate-400 hover:text-slate-600 transition-colors"
-        >
-          <X className="w-5 h-5" />
-        </button>
+    <div
+      className="fixed inset-0 z-50 bg-slate-950/60 backdrop-blur-xs flex items-center justify-center p-3 sm:p-4 overflow-y-auto select-none animate-pop-in"
+      onClick={onClose}
+    >
+      <div
+        className="relative w-full max-w-lg my-auto bg-white rounded-3xl shadow-2xl border border-slate-100 flex flex-col overflow-hidden text-center max-h-[92vh]"
+        onClick={(e) => e.stopPropagation()}
+      >
+        {/* Scrollable Container containing Banner, Avatar and all content together so no overflow clipping occurs */}
+        <div className="overflow-y-auto custom-scrollbar flex-1 relative">
+          {/* Modern Gradient Banner with Geometric Dots */}
+          <div className="relative h-28 sm:h-32 bg-gradient-to-r from-violet-600 via-indigo-600 to-purple-600 shrink-0 overflow-hidden">
+            {/* Subtle decorative dot grid pattern */}
+            <div
+              className="absolute inset-0 opacity-20"
+              style={{
+                backgroundImage: 'radial-gradient(circle, #ffffff 1.5px, transparent 1.5px)',
+                backgroundSize: '16px 16px',
+              }}
+            />
+            {/* Ambient light glow orbs */}
+            <div className="absolute -top-10 -right-10 w-36 h-36 bg-white/20 rounded-full blur-2xl pointer-events-none" />
+            <div className="absolute -bottom-10 -left-10 w-36 h-36 bg-purple-400/25 rounded-full blur-2xl pointer-events-none" />
 
-        {/* Creator Header */}
-        <div className="flex flex-col items-center text-center pb-5 border-b border-slate-100">
-          <div className="w-20 h-20 rounded-2xl bg-gradient-to-tr from-indigo-600 via-indigo-500 to-violet-500 flex items-center justify-center text-white shadow-lg shadow-indigo-500/25 mb-3 border-2 border-white ring-4 ring-indigo-50">
-            <span className="text-3xl font-black">AR</span>
+            {/* Top-Right Close Button */}
+            <button
+              onClick={onClose}
+              className="absolute top-3 right-3 z-30 p-2 rounded-full bg-black/25 hover:bg-black/40 text-white/90 hover:text-white backdrop-blur-md transition-all cursor-pointer shadow-xs active:scale-95"
+              title="বন্ধ করুন (Close)"
+            >
+              <X className="w-4 h-4 sm:w-5 sm:h-5" />
+            </button>
           </div>
 
-          <h3 className="text-2xl font-black text-slate-900 tracking-tight">
-            Atikur Rahman
-          </h3>
-          <p className="text-xs font-bold text-indigo-600 bg-indigo-50 px-3 py-1 rounded-full border border-indigo-200/80 mt-1.5">
-            Lead Developer & Creator of TypeLingo Zone
-          </p>
-          <p className="text-xs text-slate-500 mt-2 max-w-sm">
-            ইংরেজি শোনা, শুদ্ধ উচ্চারণ ও সুপারফাস্ট টাইপিং প্র্যাকটিসকে আনন্দদায়ক ও ফলপ্রসূ করতে এই প্ল্যাটফর্মটি ডেভেলপ করা হয়েছে।
-          </p>
+          {/* Modal Main Body */}
+          <div className="px-5 sm:px-6 pb-5 pt-0">
+            {/* Avatar Section - Perfectly positioned overlapping the banner without any clipping */}
+            <div className="relative -mt-14 sm:-mt-16 mb-2.5 inline-block z-20">
+              <div className="w-24 h-24 sm:w-28 sm:h-28 p-1.5 bg-white rounded-2xl shadow-xl ring-2 ring-indigo-100">
+                <div className="w-full h-full rounded-xl overflow-hidden bg-slate-100 flex items-center justify-center">
+                  <img
+                    src="/creator_headshot.png"
+                    alt="Atikur Rahman"
+                    className="w-full h-full object-cover object-center"
+                    onError={(e) => {
+                      // Fallback cascade
+                      if (!e.currentTarget.dataset.retried) {
+                        e.currentTarget.dataset.retried = '1'
+                        e.currentTarget.src = '/creator_avatar.png'
+                      } else if (e.currentTarget.dataset.retried === '1') {
+                        e.currentTarget.dataset.retried = '2'
+                        e.currentTarget.src = 'https://github.com/atikurrahmanxm.png'
+                      }
+                    }}
+                  />
+                </div>
+              </div>
 
-          <div className="flex flex-wrap items-center justify-center gap-2 mt-3.5">
+              {/* Verified Creator Badge */}
+              <div
+                className="absolute -bottom-1 -right-1 bg-emerald-500 text-white p-1 rounded-lg border-2 border-white shadow-md flex items-center justify-center"
+                title="Verified Creator"
+              >
+                <Check className="w-3.5 h-3.5 stroke-[3]" />
+              </div>
+            </div>
+
+            {/* Name & Title */}
+            <h3 className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">
+              Atikur Rahman
+            </h3>
+
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-indigo-50 text-indigo-700 border border-indigo-200/80 mt-1 shadow-2xs">
+              <Code2 className="w-3.5 h-3.5 text-indigo-600" />
+              <span>Lead Developer & Creator of TypeLingo</span>
+            </div>
+
+            {/* Bio Description */}
+            <p className="text-xs text-slate-600 mt-2 max-w-md mx-auto leading-relaxed">
+              ইংরেজি শোনা, শুদ্ধ উচ্চারণ ও হাই-স্পিড টাইপিং দক্ষতাকে আনন্দদায়ক ও প্রোডাক্টিভ করতে{' '}
+              <strong className="text-slate-800 font-bold">TypeLingo Zone</strong> তৈরি করেছি।
+            </p>
+
+            {/* Action Links (LinkedIn & GitHub) */}
+            <div className="flex flex-wrap items-center justify-center gap-2.5 mt-3">
+              <a
+                href="https://www.linkedin.com/in/atikurrahmanxm"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 px-3.5 py-1.5 bg-[#0A66C2] hover:bg-[#004182] text-white text-xs font-bold rounded-xl transition-all shadow-xs hover:shadow-sm cursor-pointer active:scale-95"
+              >
+                <LinkedinIcon className="w-3.5 h-3.5 fill-white" />
+                <span>LinkedIn Profile</span>
+                <ExternalLink className="w-3 h-3 text-white/80" />
+              </a>
+
+              <a
+                href="https://github.com/atikurrahmanxm"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 px-3.5 py-1.5 bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold rounded-xl transition-all shadow-xs hover:shadow-sm border border-slate-800 cursor-pointer active:scale-95"
+              >
+                <GithubIcon className="w-3.5 h-3.5 fill-white" />
+                <span>GitHub Repository</span>
+                <ExternalLink className="w-3 h-3 text-white/80" />
+              </a>
+            </div>
+
+            {/* Tech Stack Badges */}
+            <div className="flex flex-wrap items-center justify-center gap-1.5 mt-3">
+              {TECH_TAGS.map((tech) => (
+                <span
+                  key={tech}
+                  className="px-2.5 py-0.5 rounded-lg text-[10px] font-semibold bg-slate-100 text-slate-600 border border-slate-200/80 shadow-2xs"
+                >
+                  {tech}
+                </span>
+              ))}
+            </div>
+
+            {/* Feature Highlights of the Platform */}
+            <div className="pt-4 pb-2 space-y-2 text-left">
+              <h4 className="text-[11px] font-black text-slate-400 uppercase tracking-wider">
+                প্ল্যাটফর্মের মূল প্রকৌশল ও সুবিধাসমূহ (KEY HIGHLIGHTS)
+              </h4>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs text-slate-700">
+                {/* Card 1 */}
+                <div className="p-2.5 bg-slate-50/90 rounded-2xl border border-slate-200/70 flex items-start gap-2.5 shadow-2xs hover:border-slate-300 transition-colors">
+                  <div className="p-1.5 rounded-xl bg-emerald-100/90 text-emerald-700 shrink-0 mt-0.5">
+                    <BookOpen className="w-4 h-4" />
+                  </div>
+                  <div>
+                    <strong className="block font-bold text-slate-900 text-xs">
+                      ৩,০০০+ বাস্তবসম্মত বাক্য
+                    </strong>
+                    <span className="text-slate-500 text-[11px] leading-tight block mt-0.5">
+                      ১৭টি ক্যাটাগরির সমৃদ্ধ কনটেন্ট ও গ্রামার লাইব্রেরি।
+                    </span>
+                  </div>
+                </div>
+
+                {/* Card 2 */}
+                <div className="p-2.5 bg-slate-50/90 rounded-2xl border border-slate-200/70 flex items-start gap-2.5 shadow-2xs hover:border-slate-300 transition-colors">
+                  <div className="p-1.5 rounded-xl bg-indigo-100/90 text-indigo-700 shrink-0 mt-0.5">
+                    <Sparkles className="w-4 h-4" />
+                  </div>
+                  <div>
+                    <strong className="block font-bold text-slate-900 text-xs">
+                      নন-রিপিটিং কিউ ইঞ্জিন
+                    </strong>
+                    <span className="text-slate-500 text-[11px] leading-tight block mt-0.5">
+                      অ্যালগরিদম নিশ্চিত করে একই বাক্য বারবার যেন না আসে।
+                    </span>
+                  </div>
+                </div>
+
+                {/* Card 3 */}
+                <div className="p-2.5 bg-slate-50/90 rounded-2xl border border-slate-200/70 flex items-start gap-2.5 shadow-2xs hover:border-slate-300 transition-colors">
+                  <div className="p-1.5 rounded-xl bg-amber-100/90 text-amber-700 shrink-0 mt-0.5">
+                    <Flame className="w-4 h-4" />
+                  </div>
+                  <div>
+                    <strong className="block font-bold text-slate-900 text-xs">
+                      ডেইলি চ্যালেঞ্জ ও স্ট্রিক
+                    </strong>
+                    <span className="text-slate-500 text-[11px] leading-tight block mt-0.5">
+                      প্রতিদিনের ১০টি বাক্য ও ধারাবাহিকতা ট্র্যাকিং।
+                    </span>
+                  </div>
+                </div>
+
+                {/* Card 4 */}
+                <div className="p-2.5 bg-slate-50/90 rounded-2xl border border-slate-200/70 flex items-start gap-2.5 shadow-2xs hover:border-slate-300 transition-colors">
+                  <div className="p-1.5 rounded-xl bg-purple-100/90 text-purple-700 shrink-0 mt-0.5">
+                    <Gauge className="w-4 h-4" />
+                  </div>
+                  <div>
+                    <strong className="block font-bold text-slate-900 text-xs">
+                      রিয়েল-টাইম WPM স্পিড টেস্ট
+                    </strong>
+                    <span className="text-slate-500 text-[11px] leading-tight block mt-0.5">
+                      Monkeytype স্টাইল নিখুঁত স্পিড ও নির্ভুলতা বিশ্লেষণ।
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Bottom Footer Note & Action */}
+        <div className="px-5 py-3 border-t border-slate-100 flex items-center justify-between text-xs bg-slate-50/70 shrink-0">
+          <div className="flex items-center gap-1.5 text-slate-500 text-[11px]">
+            <span>Developed with</span>
+            <Heart className="w-3.5 h-3.5 text-rose-500 fill-rose-500" />
+            <span>by</span>
             <a
               href="https://www.linkedin.com/in/atikurrahmanxm"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 px-4 py-2 bg-[#0A66C2] hover:bg-[#004182] text-white text-xs font-bold rounded-xl transition-all shadow-sm hover:scale-102"
-            >
-              <LinkedinIcon className="w-4 h-4" />
-              <span>LinkedIn Profile</span>
-            </a>
-            <a
-              href="https://github.com/atikurrahmanxm"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 px-4 py-2 bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold rounded-xl transition-all shadow-sm hover:scale-102"
-            >
-              <GithubIcon className="w-4 h-4" />
-              <span>GitHub</span>
-            </a>
-          </div>
-        </div>
-
-        {/* Feature Highlights of the Platform */}
-        <div className="py-4 space-y-3">
-          <h4 className="text-xs font-black text-slate-400 uppercase tracking-wider">
-            প্ল্যাটফর্মের মূল সুবিধাসমূহ (Key Features)
-          </h4>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 text-xs text-slate-700">
-            <div className="p-3 bg-slate-50 rounded-2xl border border-slate-200/70 flex items-start gap-2.5">
-              <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
-              <div>
-                <strong className="block font-bold text-slate-900">৩,০০০+ বাস্তবসম্মত বাক্য</strong>
-                <span>১৭টি ক্যাটাগরির সমৃদ্ধ কনটেন্ট লাইব্রেরি।</span>
-              </div>
-            </div>
-
-            <div className="p-3 bg-slate-50 rounded-2xl border border-slate-200/70 flex items-start gap-2.5">
-              <Sparkles className="w-4 h-4 text-indigo-600 shrink-0 mt-0.5" />
-              <div>
-                <strong className="block font-bold text-slate-900">নন-রিপিটিং কিউ ইঞ্জিন</strong>
-                <span>পরের দিন আসলে একই প্রশ্ন বারবার আসবে না।</span>
-              </div>
-            </div>
-
-            <div className="p-3 bg-slate-50 rounded-2xl border border-slate-200/70 flex items-start gap-2.5">
-              <Flame className="w-4 h-4 text-amber-500 shrink-0 mt-0.5" />
-              <div>
-                <strong className="block font-bold text-slate-900">ডেইলি চ্যালেঞ্জ ও স্ট্রিক</strong>
-                <span>প্রতিদিনের ইউনিক ১০টি বাক্য ও ধারাবাহিকতা ট্র্যাকিং।</span>
-              </div>
-            </div>
-
-            <div className="p-3 bg-slate-50 rounded-2xl border border-slate-200/70 flex items-start gap-2.5">
-              <Award className="w-4 h-4 text-purple-600 shrink-0 mt-0.5" />
-              <div>
-                <strong className="block font-bold text-slate-900">রিয়েল-টাইম WPM ও স্পিড</strong>
-                <span>লাইভ স্পিড ও নির্ভুলতা বিশ্লেষণ (Monkeytype Style)।</span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Footer Note */}
-        <div className="pt-3 border-t border-slate-100 flex items-center justify-between text-xs text-slate-400">
-          <div className="flex items-center gap-1.5">
-            <span>Developed by</span>
-            <a
-              href="https://www.linkedin.com/in/atikurrahmanxm"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="font-bold text-indigo-600 hover:text-indigo-800 hover:underline transition-colors"
+              className="text-indigo-600 font-bold hover:underline"
             >
               Atikur Rahman
             </a>
           </div>
+
           <button
             onClick={onClose}
-            className="px-4 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-xl transition-colors"
+            className="px-5 py-2 bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-700 hover:to-violet-700 text-white font-bold text-xs rounded-xl shadow-sm hover:shadow-indigo-500/20 transition-all active:scale-95 cursor-pointer"
           >
-            Start Practice
+            অনুশীলন শুরু করুন
           </button>
         </div>
       </div>
