@@ -29,6 +29,7 @@ import { LessonSelectorModal } from './components/LessonSelectorModal'
 import { CustomTextModal } from './components/CustomTextModal'
 import { AboutCreatorModal } from './components/AboutCreatorModal'
 import { SpeedTestView } from './components/SpeedTestView'
+import { PracticeMilestoneModal } from './components/PracticeMilestoneModal'
 
 export function App() {
   // Practice Mode: 'auto' (smart randomized non-stop flow across all 3,000+ sentences) | 'lesson'
@@ -73,6 +74,8 @@ export function App() {
   const [isLessonMenuOpen, setIsLessonMenuOpen] = useState(false)
   const [isCustomModalOpen, setIsCustomModalOpen] = useState(false)
   const [isAboutCreatorOpen, setIsAboutCreatorOpen] = useState(false)
+  const [isMilestoneOpen, setIsMilestoneOpen] = useState(false)
+  const [sessionCompletedCount, setSessionCompletedCount] = useState(0)
 
   // Active exercise depending on mode
   const currentExercise =
@@ -203,8 +206,24 @@ export function App() {
       setStreakData(getStreakData())
     }
 
+    const nextSessionCount = sessionCompletedCount + 1
+    setSessionCompletedCount(nextSessionCount)
+
+    // Check if 5-sentence milestone reached!
+    const isLastLessonExercise =
+      practiceMode !== 'auto' &&
+      lessonExerciseIndex + 1 >= currentLesson.exercises.length
+    const isMilestoneHit =
+      !isLastLessonExercise && nextSessionCount > 0 && nextSessionCount % 5 === 0
+
     // Auto-advance after 750ms so chime sound finishes smoothly
     setTimeout(() => {
+      if (isMilestoneHit) {
+        setIsMilestoneOpen(true)
+        playCelebrationSound(isMuted)
+        return
+      }
+
       if (practiceMode === 'auto') {
         if (queueIndex + 1 < queue.length) {
           setQueueIndex((prev) => prev + 1)
@@ -228,9 +247,30 @@ export function App() {
     }, 750)
   }
 
+  // Milestone continue handler (advances to the next exercise)
+  const handleContinueFromMilestone = () => {
+    setIsMilestoneOpen(false)
+    if (practiceMode === 'auto') {
+      if (queueIndex + 1 < queue.length) {
+        setQueueIndex((prev) => prev + 1)
+      } else {
+        const freshQueue = generateSmartQueue(ALL_EXERCISES, selectedCategory)
+        setQueue(freshQueue)
+        setQueueIndex(0)
+      }
+    } else {
+      if (lessonExerciseIndex + 1 < currentLesson.exercises.length) {
+        setLessonExerciseIndex((prev) => prev + 1)
+      } else {
+        setIsTimerRunning(false)
+        setIsLessonFinished(true)
+      }
+    }
+  }
+
   // Super fluid character input
   const handleCharacterInput = (char) => {
-    if (isCompleted || !targetSentence) return
+    if (isCompleted || isMilestoneOpen || !targetSentence) return
     unlockAudio()
 
     if (!isTimerRunning) {
@@ -334,7 +374,7 @@ export function App() {
   // Keyboard Shortcuts (Tab to replay, Ctrl+Space for hint, Ctrl+H to toggle preview)
   useEffect(() => {
     const handleGlobalKey = (e) => {
-      if (practiceMode === 'speedtest') return
+      if (practiceMode === 'speedtest' || isMilestoneOpen) return
 
       // Tab to replay voice
       if (e.key === 'Tab') {
@@ -628,6 +668,16 @@ export function App() {
       <AboutCreatorModal
         isOpen={isAboutCreatorOpen}
         onClose={() => setIsAboutCreatorOpen(false)}
+      />
+
+      {/* 5-Sentence Milestone Encouragement Modal */}
+      <PracticeMilestoneModal
+        isOpen={isMilestoneOpen}
+        onContinue={handleContinueFromMilestone}
+        completedCount={sessionCompletedCount}
+        wpm={wpm}
+        accuracy={accuracy}
+        streak={Math.max(1, streakData.streak || 1)}
       />
     </div>
   )
